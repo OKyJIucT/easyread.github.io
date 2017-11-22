@@ -29,6 +29,10 @@
         v-btn(color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
         | Uniq words count {{ uniqWordsCount }}
 
+        v-list
+          v-list-tile(@click='' v-for="item in uniqTextArray")
+            v-list-tile-content
+              v-list-tile-title {{ item }}
 
     v-footer(:fixed='fixed', app)
       span © 2017
@@ -48,6 +52,7 @@
         clipped: false,
         drawer: true,
         fixed: false,
+        uniqTextArray: [],
         items: [
           {
             icon: 'bubble_chart',
@@ -78,9 +83,11 @@
       analyze () {
         // this.loading = true
         const textArray = this.text.split(' ')
-        const uniqTextArray = _.uniq(textArray).length
-        console.log(this.text)
-        this.uniqWordsCount = uniqTextArray
+        const sortUniq = _.uniq(textArray).filter((item) => {
+          return item.match(/[a-zA-Z]/)
+        })
+        this.uniqTextArray = sortUniq.sort()
+        this.uniqWordsCount = this.uniqTextArray.length
       }
     }
   }
