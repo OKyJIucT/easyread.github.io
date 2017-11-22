@@ -84,7 +84,7 @@
         // this.loading = true
         const textArray = this.text.split(' ')
         const sortUniq = _.uniq(textArray).filter((item) => {
-          return item.match(/[a-zA-Z]/)
+          return item.match(/^[a-zA-Z]+$/)
         })
         this.uniqTextArray = sortUniq.sort()
         this.uniqWordsCount = this.uniqTextArray.length
