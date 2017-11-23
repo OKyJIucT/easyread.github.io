@@ -28,11 +28,16 @@
         v-text-field(name="input-1" label="Label Text" textarea v-model="text")
         v-btn(color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
         | Uniq words count {{ uniqWordsCount }}
+        v-btn(color="secondary" @click.native="addTolocalDB()") ADD TO LOCAL DB
+        v-btn(color="secondary" @click.native="getFromlocalDB()") GET FROM LOCAL DB
+        v-btn(color="secondary" @click.native="getKeysInStorage()") GET KEYS FROM LOCAL DB
+        
+        
 
         v-list
           v-list-tile(@click='' v-for="item in uniqTextArray")
             v-list-tile-content
-              v-list-tile-title {{ item }}
+              v-list-tile-title {{ item.word }}
 
     v-footer(:fixed='fixed', app)
       span © 2017
@@ -76,8 +81,30 @@
         const sortUniq = _.uniq(textArray).filter((item) => {
           return item.match(/^[a-zA-Z]+$/)
         })
-        this.uniqTextArray = sortUniq.sort()
+        // this.uniqTextArray = sortUniq.sort()
+        this.uniqTextArray = sortUniq.map((item, index) => {
+          item = {
+            id: index,
+            word: item
+          }
+          return item
+        }).sort()
         this.uniqWordsCount = this.uniqTextArray.length
+      },
+      addTolocalDB () {
+        this.$setItem('uniqTextArray', this.uniqTextArray).then((res) => {
+          console.log('res', res)
+        })
+      },
+      getFromlocalDB () {
+        this.$getItem('uniqTextArray').then((res) => {
+          console.log('Pick from local DB', res)
+        })
+      },
+      getKeysInStorage () {
+        this.$keysInStorage().then((res) => {
+          console.log('Pick all keys in storage', res)
+        })
       }
     }
   }
