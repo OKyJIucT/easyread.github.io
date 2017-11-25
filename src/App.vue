@@ -31,7 +31,13 @@
         v-btn(color="secondary" @click.native="addTolocalDB()") ADD TO LOCAL DB
         v-btn(color="secondary" @click.native="getFromlocalDB()") GET FROM LOCAL DB
         v-btn(color="secondary" @click.native="getKeysInStorage()") GET KEYS FROM LOCAL DB
-        
+        v-text-field(
+          name="input-2-3"
+          label="Hint Text"
+          v-model="link"
+          class="input-group--focused"
+          single-line)
+        v-btn(color="secondary" @click.native="parse()") PARSE
         
 
         v-list
@@ -46,11 +52,13 @@
 
 <script>
   import _ from 'lodash'
+  import axios from 'axios'
 
   export default {
     data () {
       return {
         text: null,
+        link: null,
         uniqWordsCount: 0,
         loader: null,
         loading: false,
@@ -104,6 +112,12 @@
       getKeysInStorage () {
         this.$keysInStorage().then((res) => {
           console.log('Pick all keys in storage', res)
+        })
+      },
+      parse () {
+        console.log(this.link)
+        axios.get(this.link).then((res) => {
+          console.log('Response parse', res)
         })
       }
     }
