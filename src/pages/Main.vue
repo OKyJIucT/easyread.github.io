@@ -9,14 +9,16 @@
       v-btn(color="secondary" @click.native="getKeysInStorage()") GET KEYS FROM LOCAL DB
       
       v-list
-        v-list-tile(@click='' v-for="(item, i) in uniqTextArray", :key='i')
-          v-list-tile-content
-            v-list-tile-title {{ item.word }}
+        v-list-tile(@click='add(item)' v-for="(item, i) in uniqTextArray", :key='i')
+          v-list-tile-content {{ item.word }}
+          v-list-tile-action
+            v-icon(light) playlist_add
 
 </template>
 
 <script>
   import _ from 'lodash'
+  // import { uuid } from 'vue-idb'
 
   export default {
     data () {
@@ -26,39 +28,48 @@
         uniqWordsCount: 0,
         loader: null,
         loading: false,
-        uniqTextArray: []
+        uniqTextArray: [],
+        words: []
       }
     },
+    mounted: function () {
+      this.update()
+    },
     methods: {
+      update () {
+        this.$db.words.toArray().then((words) => {
+          console.log(words)
+          this.words = words
+        })
+      },
       analyze () {
         // this.loading = true
         const textArray = this.text.split(' ')
         const sortUniq = _.uniq(textArray).filter((item) => {
           return item.match(/^[a-zA-Z]+$/)
         })
-        // this.uniqTextArray = sortUniq.sort()
         this.uniqTextArray = sortUniq.map((item, index) => {
+          const findedWord = this.words.find(word => word.id === index)
+          if (findedWord) {
+            return
+          }
           item = {
             id: index,
             word: item
           }
           return item
-        }).sort()
+        }).filter(Boolean).sort()
+        console.log(this.uniqTextArray)
+        console.log(this.uniqTextArray.sort())
         this.uniqWordsCount = this.uniqTextArray.length
       },
-      addTolocalDB () {
-        this.$setItem('uniqTextArray', this.uniqTextArray).then((res) => {
-          console.log('res', res)
-        })
-      },
-      getFromlocalDB () {
-        this.$getItem('uniqTextArray').then((res) => {
-          console.log('Pick from local DB', res)
-        })
-      },
-      getKeysInStorage () {
-        this.$keysInStorage().then((res) => {
-          console.log('Pick all keys in storage', res)
+      add (word) {
+        console.log(word)
+        this.$db.words.add({
+          id: word.id,
+          word: word.word
+        }).then(() => {
+          this.update()
         })
       }
     }
