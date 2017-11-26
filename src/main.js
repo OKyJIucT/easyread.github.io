@@ -2,19 +2,33 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import Vuetify from 'vuetify'
-import VueLocalForage from 'vue-localforage'
 import 'vuetify/dist/vuetify.css'
+import VueIdb from 'vue-idb'
 
 import App from './App'
 import router from './router'
 
 Vue.use(Vuetify)
-Vue.use(VueLocalForage)
+Vue.use(VueIdb)
 Vue.config.productionTip = false
+
+const idb = new VueIdb({
+  version: 1,
+  database: 'test',
+  schemas: [
+    {
+      tests: 'id, title, created_at, updated_at'
+    },
+    {
+      posts: 'id, owner'
+    }
+  ]
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  idb: idb,
   router,
   template: '<App/>',
   components: { App }

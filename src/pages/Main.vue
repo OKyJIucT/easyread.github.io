@@ -10,7 +10,7 @@
       
 
       v-list
-        v-list-tile(@click='' v-for="item in uniqTextArray")
+        v-list-tile(@click='' v-for="(item, i) in uniqTextArray", :key='i')
           v-list-tile-content
             v-list-tile-title {{ item.word }}
 
