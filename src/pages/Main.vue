@@ -8,7 +8,6 @@
       v-btn(color="secondary" @click.native="getFromlocalDB()") GET FROM LOCAL DB
       v-btn(color="secondary" @click.native="getKeysInStorage()") GET KEYS FROM LOCAL DB
       
-
       v-list
         v-list-tile(@click='' v-for="(item, i) in uniqTextArray", :key='i')
           v-list-tile-content
@@ -27,28 +26,7 @@
         uniqWordsCount: 0,
         loader: null,
         loading: false,
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        uniqTextArray: [],
-        items: [
-          {
-            icon: 'bubble_chart',
-            title: 'Main'
-          },
-          {
-            icon: 'bubble_chart',
-            title: 'Words'
-          },
-          {
-            icon: 'bubble_chart',
-            title: 'Articles'
-          }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
-        title: 'Translater'
+        uniqTextArray: []
       }
     },
     methods: {
