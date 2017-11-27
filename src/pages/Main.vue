@@ -9,7 +9,7 @@
       v-btn(color="secondary" @click.native="getKeysInStorage()") GET KEYS FROM LOCAL DB
       
       v-list
-        v-list-tile(@click='add(item)' v-for="(item, i) in uniqTextArray", :key='i')
+        v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
           v-list-tile-content {{ item.word }}
           v-list-tile-action
             v-icon(light) playlist_add
@@ -18,7 +18,7 @@
 
 <script>
   import _ from 'lodash'
-  // import { uuid } from 'vue-idb'
+  import { uuid } from 'vue-idb'
 
   export default {
     data () {
@@ -48,23 +48,21 @@
         const sortUniq = _.uniq(textArray).filter((item) => {
           return item.match(/^[a-zA-Z]+$/)
         })
-        this.uniqTextArray = sortUniq.map((item, index) => {
-          const findedWord = this.words.find(word => word.id === index)
-          if (findedWord) {
-            return
-          }
-          item = {
-            id: index,
-            word: item
-          }
-          return item
-        }).filter(Boolean).sort()
+        this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
+          .sort()
+          .map((item) => {
+            item = {
+              id: uuid(),
+              word: item
+            }
+            return item
+          })
         console.log(this.uniqTextArray)
-        console.log(this.uniqTextArray.sort())
         this.uniqWordsCount = this.uniqTextArray.length
       },
-      add (word) {
+      add (word, index) {
         console.log(word)
+        this.uniqTextArray.splice(index, 1)
         this.$db.words.add({
           id: word.id,
           word: word.word
