@@ -1,8 +1,8 @@
 <template lang="pug">
   v-app(light)
-    v-navigation-drawer(fixed, :mini-variant='miniVariant', :clipped='clipped', v-model='drawer', app)
+    v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app)
       v-list
-        v-list-tile(avatar='', @click='')
+        v-list-tile(avatar='' @click='')
           v-list-tile-avatar
             v-icon account_circle
           v-list-tile-content
@@ -19,14 +19,15 @@
             v-list-tile-content
               v-list-tile-title(v-text='item.title')
     
-    v-toolbar(fixed, app, :clipped-left='clipped')
-      v-toolbar-side-icon(@click.stop='drawer = !drawer', light)
+    v-toolbar(fixed app :clipped-left='clipped'  dark color="primary")
+      v-toolbar-side-icon(@click.stop='drawer = !drawer', dark)
       v-toolbar-title(v-text='title')
     
     router-view
 
     v-footer(:fixed='fixed', app)
-      span © 2017
+      span © 2017&nbsp;
+      a(href="https://github.com/PavelGonzales" target="_blank") Pavel Gonzales
 
 </template>
 
@@ -40,27 +41,26 @@
         loader: null,
         loading: false,
         clipped: false,
-        drawer: true,
+        drawer: false,
         fixed: false,
         uniqTextArray: [],
         items: [
           {
-            icon: 'bubble_chart',
+            icon: 'home',
             title: 'Main',
             route: '/'
           },
           {
-            icon: 'bubble_chart',
+            icon: 'playlist_add_check',
             title: 'Words',
             route: 'words'
-          },
-          {
-            icon: 'bubble_chart',
-            title: 'Articles',
-            route: 'articles'
           }
+          // {
+          //   icon: 'bubble_chart',
+          //   title: 'Articles',
+          //   route: 'articles'
+          // }
         ],
-        miniVariant: false,
         right: true,
         rightDrawer: false,
         title: 'Translater'
@@ -71,3 +71,10 @@
     }
   }
 </script>
+
+<style lang="stylus">
+
+  a 
+    text-decoration none
+
+</style>

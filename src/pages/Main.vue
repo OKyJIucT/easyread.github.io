@@ -4,9 +4,6 @@
       v-text-field(name="input-1" label="Label Text" textarea v-model="text")
       v-btn(color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
       | Uniq words count {{ uniqWordsCount }}
-      v-btn(color="secondary" @click.native="addTolocalDB()") ADD TO LOCAL DB
-      v-btn(color="secondary" @click.native="getFromlocalDB()") GET FROM LOCAL DB
-      v-btn(color="secondary" @click.native="getKeysInStorage()") GET KEYS FROM LOCAL DB
       
       v-list
         v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')

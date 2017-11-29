@@ -8,7 +8,7 @@
             v-list-tile-sub-title Перевод
           v-list-tile-action
             v-btn(icon ripple @click="speak(item.word)")
-              v-icon(light) volume_up
+              v-icon(light color='blue') volume_up
           v-list-tile-action
             v-btn(icon ripple)
               v-icon(light) playlist_add
