@@ -49,14 +49,7 @@
           return item.match(/^[a-zA-Z]+$/)
         })
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
-          .sort()
-          .map((item) => {
-            item = {
-              id: uuid(),
-              word: item
-            }
-            return item
-          })
+          .sort().map(item => ({id: uuid(), word: item}))
         console.log(this.uniqTextArray)
         this.uniqWordsCount = this.uniqTextArray.length
       },

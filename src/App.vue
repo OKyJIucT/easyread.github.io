@@ -65,6 +65,9 @@
         rightDrawer: false,
         title: 'Translater'
       }
+    },
+    mounted: function () {
+      window.responsiveVoice.setDefaultVoice('US English Female')
     }
   }
 </script>

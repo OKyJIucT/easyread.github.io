@@ -3,9 +3,15 @@
     v-container(fluid)
       v-list
         v-list-tile(@click='' v-for="(item, i) in words", :key='i')
-          v-list-tile-content {{ item.word }}
+          v-list-tile-content 
+            v-list-tile-title {{ item.word }}
+            v-list-tile-sub-title Перевод
           v-list-tile-action
-            v-icon(light) playlist_add
+            v-btn(icon ripple @click="speak(item.word)")
+              v-icon(light) volume_up
+          v-list-tile-action
+            v-btn(icon ripple)
+              v-icon(light) playlist_add
       
 </template>
 
@@ -21,6 +27,11 @@
         console.log(words)
         this.words = words
       })
+    },
+    methods: {
+      speak (word) {
+        window.responsiveVoice.speak(word)
+      }
     }
   }
 </script>
