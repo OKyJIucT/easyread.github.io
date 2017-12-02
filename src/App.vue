@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-app(light)
-    v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app)
+  v-app(light :class="{ unauth: !isLoggedIn }")
+    v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app  v-if='isLoggedIn')
       v-list
         v-list-tile(avatar='' @click='')
           v-list-tile-avatar
@@ -18,8 +18,13 @@
               v-icon(light, v-html='item.icon')
             v-list-tile-content
               v-list-tile-title(v-text='item.title')
+        v-list-tile(value='true', exact @click='logout')
+          v-list-tile-action
+            v-icon(light) exit_to_app
+          v-list-tile-content
+            v-list-tile-title Logout
     
-    v-toolbar(fixed app :clipped-left='clipped'  dark color="primary")
+    v-toolbar(fixed app :clipped-left='clipped'  dark color="primary" v-if='isLoggedIn')
       v-toolbar-side-icon(@click.stop='drawer = !drawer', dark)
       v-toolbar-title(v-text='title')
     
@@ -32,6 +37,7 @@
 </template>
 
 <script>
+  import router from './router'
   export default {
     data () {
       return {
@@ -68,12 +74,32 @@
     },
     mounted: function () {
       window.responsiveVoice.setDefaultVoice('US English Female')
+    },
+    created () {
+      console.log('isLoggedIn', this.isLoggedIn)
+    },
+    computed: {
+      isLoggedIn () {
+        return this.$store.getters.isLoggedIn
+      }
+    },
+    methods: {
+      logout () {
+        this.$store.dispatch('logout').then((res) => {
+          router.push('./auth')
+        })
+      }
     }
   }
 </script>
 
 <style lang="stylus">
 
+  .unauth 
+    background: #69BD50 !important
+    background: -moz-linear-gradient(45deg, #69BD50 0%, #69bd50 100%) !important
+    background: -webkit-linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
+    background: linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
   a 
     text-decoration none
 

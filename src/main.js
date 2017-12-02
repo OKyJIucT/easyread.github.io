@@ -4,12 +4,15 @@ import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.css'
 import VueIdb from 'vue-idb'
+import Vuex from 'vuex'
 
 import App from './App'
 import router from './router'
+import store from './store'
 
 Vue.use(Vuetify)
 Vue.use(VueIdb)
+Vue.use(Vuex)
 Vue.config.productionTip = false
 
 const idb = new VueIdb({
@@ -26,6 +29,7 @@ const idb = new VueIdb({
 new Vue({
   el: '#app',
   idb: idb,
+  store,
   router,
   template: '<App/>',
   components: { App }

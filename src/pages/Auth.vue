@@ -6,14 +6,14 @@
           v-container(fluid)
             v-form(v-model="valid")
               v-text-field(
-                label="Name"
-                v-model="name"
-                :rules="nameRules"
-                required)
-              v-text-field(
                 label="E-mail"
                 v-model="email"
                 :rules="emailRules"
+                required)
+              v-text-field(
+                label="Password"
+                v-model="password"
+                :rules="passwordRules"
                 required)
 
               v-container(grid-list-xs)
@@ -21,7 +21,7 @@
                   v-flex(class="mb-4" xs-12)
                     v-btn(
                       :loading="loading1"
-                      @click.native="loader = 'loading1'"
+                      @click.native="login()"
                       :disabled="loading1"
                       color="light-green"
                       class="white--text ma-0 w-100") Login
@@ -51,10 +51,10 @@
         loading2: false,
         loading3: false,
         valid: false,
-        name: '',
-        nameRules: [
-          (v) => !!v || 'Name is required',
-          (v) => v.length <= 10 || 'Name must be less than 10 characters'
+        password: '',
+        passwordRules: [
+          (v) => !!v || 'password is required',
+          (v) => v.length <= 10 || 'password must be less than 10 characters'
         ],
         email: '',
         emailRules: [
@@ -71,6 +71,17 @@
         setTimeout(() => (this[l] = false), 3000)
 
         this.loader = null
+      }
+    },
+    methods: {
+      login () {
+        this.loader = 'loading1'
+        this.$store.dispatch('login', {
+          email: this.email,
+          password: this.password
+        }).then(() => {
+          this.$router.push('/')
+        })
       }
     }
   }
