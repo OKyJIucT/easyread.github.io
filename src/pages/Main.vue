@@ -55,7 +55,8 @@
         this.uniqTextArray.splice(index, 1)
         this.$db.words.add({
           id: word.id,
-          word: word.word
+          word: word.word,
+          translate: ''
         }).then(() => {
           this.update()
         })
