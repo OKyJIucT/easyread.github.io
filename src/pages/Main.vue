@@ -1,10 +1,15 @@
 <template lang="pug">
   v-content
     v-container(fluid)
-      v-text-field(name="input-1" label="Label Text" textarea v-model="text")
-      v-btn(color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
+      v-radio-group(v-model="type" row)
+        v-radio(label="Link" value="link")
+        v-radio(label="Text" value="text")
+      v-text-field(v-if="type === 'link'" name="input-1" label="Label Text" id="testing" v-model="modelLink")
+      v-btn(v-if="type === 'link'" color="secondary" :loading="loading" @click.native="parse()" :disabled="loading") Parse
+      v-text-field(v-if="type === 'text'" name="input-1" label="Label Text" textarea v-model="text")
+      v-btn(v-if="type === 'text'" color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
       | Uniq words count {{ uniqWordsCount }}
-      
+
       v-list
         v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
           v-list-tile-content {{ item.word }}
@@ -16,17 +21,21 @@
 <script>
   import _ from 'lodash'
   import { uuid } from 'vue-idb'
+  import axios from 'axios'
+  const API_URL = 'http://localhost:3003'
 
   export default {
     data () {
       return {
+        type: 'link',
         text: null,
         link: null,
         uniqWordsCount: 0,
         loader: null,
         loading: false,
         uniqTextArray: [],
-        words: []
+        words: [],
+        modelLink: ''
       }
     },
     mounted: function () {
@@ -38,6 +47,14 @@
           console.log(words)
           this.words = words
         })
+      },
+      parse () {
+        axios.get(`${API_URL}/scraping/${encodeURIComponent(this.modelLink)}`)
+          .then((res) => {
+            console.log(res)
+          }).catch((err) => {
+            console.log(err)
+          })
       },
       analyze () {
         // this.loading = true
