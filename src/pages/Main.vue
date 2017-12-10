@@ -1,20 +1,51 @@
 <template lang="pug">
   v-content
-    v-container(fluid)
-      v-radio-group(v-model="type" row)
-        v-radio(label="Link" value="link")
-        v-radio(label="Text" value="text")
-      v-text-field(v-if="type === 'link'" name="input-1" label="Label Text" id="testing" v-model="modelLink")
-      v-btn(v-if="type === 'link'" color="secondary" :loading="loading" @click.native="parse()" :disabled="loading") Parse
-      v-text-field(v-if="type === 'text'" name="input-1" label="Label Text" textarea v-model="text")
-      v-btn(v-if="type === 'text'" color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
-      | Uniq words count {{ uniqWordsCount }}
+    v-container
+      v-layout(row wrap)
+        v-flex(xs12 sm12 md8 offset-md2)
+          v-radio-group(v-model="type" row)
+            v-radio(label="Link" value="link")
+            v-radio(label="Text" value="text")
+        
+        v-flex(xs12 sm12 md8 offset-md2)
+          div(v-if="type === 'link'")
+            v-text-field(
+              name="field-link" 
+              label="Label Text"
+              v-model="modelLink")
 
-      v-list
-        v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
-          v-list-tile-content {{ item.word }}
-          v-list-tile-action
-            v-icon(light) playlist_add
+            v-btn(
+              color="secondary" 
+              :loading="loading" 
+              @click.native="getOpenGraph()" 
+              :disabled="loading") go
+          
+          div(v-if="type === 'text'")
+            v-text-field(name="input-1" label="Label Text" textarea v-model="text")
+            v-btn(color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
+            
+        
+    v-container(grid-list-lg)
+      v-layout(row wrap)
+        v-flex(xs12 sm12 md8 offset-md2 v-if="og")
+          v-card
+            v-card-media(:src="og.ogImage.url" height="200px")
+            v-card-title(primary-title)
+              div
+                h3(class="headline mb-0") {{ og.ogTitle}}
+                div {{ og.ogDescription }}
+            v-card-actions
+              v-btn(flat color="orange") add to list
+              v-btn(flat color="orange" @click.native="parse()") parse
+      
+        v-flex(xs12 sm12 md8 offset-md2)
+          | Uniq words count {{ uniqWordsCount }}
+          v-list
+            v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
+              v-list-tile-content {{ item.word }}
+              v-list-tile-action
+                v-icon(light) playlist_add
+
 
 </template>
 
@@ -35,7 +66,8 @@
         loading: false,
         uniqTextArray: [],
         words: [],
-        modelLink: ''
+        modelLink: '',
+        og: null
       }
     },
     mounted: function () {
@@ -51,7 +83,18 @@
       parse () {
         axios.get(`${API_URL}/scraping/${encodeURIComponent(this.modelLink)}`)
           .then((res) => {
+            console.log(res.data)
+            this.uniqTextArray = res.data.uniq_text_array
+            this.uniqWordsCount = res.data.uniq_words_count
+          }).catch((err) => {
+            console.log(err)
+          })
+      },
+      getOpenGraph () {
+        axios.get(`${API_URL}/opengraph/${encodeURIComponent(this.modelLink)}`)
+          .then((res) => {
             console.log(res)
+            this.og = res.data.data
           }).catch((err) => {
             console.log(err)
           })
