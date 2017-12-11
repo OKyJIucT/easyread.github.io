@@ -27,6 +27,12 @@
         
     v-container(grid-list-lg)
       v-layout(row wrap)
+        v-flex(xs12 sm12 md8 offset-md2 v-if="isOgLoading" class="text-xs-center")
+          v-progress-circular(
+            indeterminate 
+            v-bind:size="120" 
+            v-bind:width="3" 
+            color="purple")
         v-flex(xs12 sm12 md8 offset-md2 v-if="og")
           v-card
             v-card-media(:src="og.ogImage.url" height="200px")
@@ -37,8 +43,14 @@
             v-card-actions
               v-btn(flat color="orange") add to list
               v-btn(flat color="orange" @click.native="parse()") parse
-      
-        v-flex(xs12 sm12 md8 offset-md2)
+
+        v-flex(xs12 sm12 md8 offset-md2 v-if="isWordsLoading" class="text-xs-center")
+          v-progress-circular(
+            indeterminate 
+            v-bind:size="120" 
+            v-bind:width="3" 
+            color="purple")
+        v-flex(xs12 sm12 md8 offset-md2 v-if="uniqTextArray.length")
           | Uniq words count {{ uniqWordsCount }}
           v-list
             v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
@@ -53,7 +65,7 @@
   import _ from 'lodash'
   import { uuid } from 'vue-idb'
   import axios from 'axios'
-  const API_URL = 'http://localhost:3003'
+  const API_URL = 'http://localhost:1488'
 
   export default {
     data () {
@@ -62,12 +74,12 @@
         text: null,
         link: null,
         uniqWordsCount: 0,
-        loader: null,
-        loading: false,
         uniqTextArray: [],
         words: [],
         modelLink: '',
-        og: null
+        og: null,
+        isOgLoading: false,
+        isWordsLoading: false
       }
     },
     mounted: function () {
@@ -81,20 +93,24 @@
         })
       },
       parse () {
+        this.isWordsLoading = true
         axios.get(`${API_URL}/scraping/${encodeURIComponent(this.modelLink)}`)
           .then((res) => {
             console.log(res.data)
             this.uniqTextArray = res.data.uniq_text_array
             this.uniqWordsCount = res.data.uniq_words_count
+            this.isWordsLoading = false
           }).catch((err) => {
             console.log(err)
           })
       },
       getOpenGraph () {
+        this.isOgLoading = true
         axios.get(`${API_URL}/opengraph/${encodeURIComponent(this.modelLink)}`)
           .then((res) => {
             console.log(res)
             this.og = res.data.data
+            this.isOgLoading = false
           }).catch((err) => {
             console.log(err)
           })
