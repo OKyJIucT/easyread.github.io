@@ -43,9 +43,7 @@
       return {
         text: null,
         link: null,
-        uniqWordsCount: 0,
         loader: null,
-        loading: false,
         clipped: false,
         drawer: false,
         fixed: false,
@@ -60,12 +58,17 @@
             icon: 'playlist_add_check',
             title: 'Words',
             route: 'words'
+          },
+          {
+            icon: 'book',
+            title: 'Articles',
+            route: 'articles'
+          },
+          {
+            icon: 'extension',
+            title: 'Learn',
+            route: 'learn'
           }
-          // {
-          //   icon: 'bubble_chart',
-          //   title: 'Articles',
-          //   route: 'articles'
-          // }
         ],
         right: true,
         rightDrawer: false,
@@ -74,6 +77,7 @@
     },
     mounted: function () {
       window.responsiveVoice.setDefaultVoice('US English Female')
+      console.log('DB', this.$db)
     },
     created () {
       console.log('isLoggedIn', this.isLoggedIn)

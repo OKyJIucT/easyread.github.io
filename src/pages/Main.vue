@@ -16,13 +16,11 @@
 
             v-btn(
               color="secondary" 
-              :loading="loading" 
-              @click.native="getOpenGraph()" 
-              :disabled="loading") go
+              @click.native="getOpenGraph()") go
           
           div(v-if="type === 'text'")
             v-text-field(name="input-1" label="Label Text" textarea v-model="text")
-            v-btn(color="secondary" :loading="loading" @click.native="analyze()" :disabled="loading") Analyze
+            v-btn(color="secondary" @click.native="analyze()") Analyze
             
         
     v-container(grid-list-lg)
@@ -33,6 +31,8 @@
             v-bind:size="120" 
             v-bind:width="3" 
             color="purple")
+        
+        // OG CARD =========================================================
         v-flex(xs12 sm12 md8 offset-md2 v-if="og")
           v-card
             v-card-media(:src="og.ogImage.url" height="200px")
@@ -41,22 +41,39 @@
                 h3(class="headline mb-0") {{ og.ogTitle}}
                 div {{ og.ogDescription }}
             v-card-actions
-              v-btn(flat color="orange") add to list
+              v-btn(flat color="orange" @click.native="addToList()") add to list
               v-btn(flat color="orange" @click.native="parse()") parse
 
-        v-flex(xs12 sm12 md8 offset-md2 v-if="isWordsLoading" class="text-xs-center")
-          v-progress-circular(
-            indeterminate 
-            v-bind:size="120" 
-            v-bind:width="3" 
-            color="purple")
-        v-flex(xs12 sm12 md8 offset-md2 v-if="uniqTextArray.length")
-          | Uniq words count {{ uniqWordsCount }}
-          v-list
-            v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
-              v-list-tile-content {{ item.word }}
-              v-list-tile-action
-                v-icon(light) playlist_add
+        // TEXT CARD =======================================================
+        v-flex(xs12 sm12 md8 offset-md2 v-if="textLoaded")
+          v-card
+            v-card-media(src="http://lorempixel.com/400/200/" height="200px")
+            v-card-title(primary-title)
+              div
+                v-text-field(
+                  name="textTitle" 
+                  label="Title"
+                  v-model="textTitle")
+                //- h3(class="headline mb-0") {{ og.ogTitle}}
+
+                div {{ text }}
+            v-card-actions
+              v-btn(flat color="orange" @click.native="addToList()") add to list
+              v-btn(flat color="orange") study
+
+        //- v-flex(xs12 sm12 md8 offset-md2 v-if="isWordsLoading" class="text-xs-center")
+        //-   v-progress-circular(
+        //-     indeterminate 
+        //-     v-bind:size="120" 
+        //-     v-bind:width="3" 
+        //-     color="purple")
+        //- v-flex(xs12 sm12 md8 offset-md2 v-if="uniqTextArray.length")
+        //-   | Uniq words count {{ uniqWordsCount }}
+        //-   v-list
+        //-     v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
+        //-       v-list-tile-content {{ item.word }}
+        //-       v-list-tile-action
+        //-         v-icon(light) playlist_add
 
 
 </template>
@@ -77,9 +94,11 @@
         uniqTextArray: [],
         words: [],
         modelLink: '',
+        textTitle: '',
         og: null,
         isOgLoading: false,
-        isWordsLoading: false
+        isWordsLoading: false,
+        textLoaded: false
       }
     },
     mounted: function () {
@@ -90,6 +109,8 @@
         this.$db.words.toArray().then((words) => {
           console.log(words)
           this.words = words
+        }).catch((err) => {
+          console.log(err)
         })
       },
       parse () {
@@ -116,7 +137,8 @@
           })
       },
       analyze () {
-        // this.loading = true
+        this.isOgLoading = true
+        this.textLoaded = true
         const textArray = this.text.split(' ')
         const sortUniq = _.uniq(textArray).filter((item) => {
           return item.match(/^[a-zA-Z]+$/)
@@ -125,6 +147,20 @@
           .sort().map(item => ({id: uuid(), word: item}))
         console.log(this.uniqTextArray)
         this.uniqWordsCount = this.uniqTextArray.length
+        this.isOgLoading = false
+      },
+      addToList () {
+        this.$db.articles.add({
+          id: uuid(),
+          image: 'http://lorempixel.com/400/200/',
+          name: this.textTitle,
+          words: this.uniqTextArray,
+          description: this.text,
+          progress: 16
+        }).then(() => {
+          console.log('done')
+          this.update()
+        }).catch(console.log)
       },
       add (word, index) {
         console.log(word)

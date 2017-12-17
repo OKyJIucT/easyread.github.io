@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '@/pages/Main'
-import Words from '@/pages/Words'
 import Auth from '@/pages/Auth'
+import Words from '@/pages/Words'
+import Learn from '@/pages/Learn'
 import Articles from '@/pages/Articles'
 import store from '@/store'
 
@@ -32,6 +33,12 @@ const router = new Router({
       path: '/articles',
       name: 'Articles',
       component: Articles,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/learn',
+      name: 'Learn',
+      component: Learn,
       beforeEnter: requireAuth
     }
   ]

@@ -17,11 +17,11 @@ Vue.config.productionTip = false
 
 const idb = new VueIdb({
   version: 1,
-  database: 'words',
+  database: 'wordsdb',
   schemas: [
-    {
-      words: 'id, word, translate'
-    }
+    { words: 'id, word, translate' },
+    { learnedWords: 'id, word, translate, learned' },
+    { articles: 'id, name, description, words, progress' }
   ]
 })
 
