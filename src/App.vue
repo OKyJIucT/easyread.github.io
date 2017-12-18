@@ -1,17 +1,18 @@
 <template lang="pug">
   v-app(light :class="{ unauth: !isLoggedIn }")
     v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app  v-if='isLoggedIn')
-      v-list
-        v-list-tile(avatar='' @click='')
-          v-list-tile-avatar
-            v-icon account_circle
-          v-list-tile-content
-            v-list-tile-title Pavel Gnzales
-            v-list-tile-sub-title Premium 
-          v-list-tile-action
-            v-btn(icon='', ripple='')
-              v-icon(color='grey lighten-1') more_vert
+      v-card-media(src='/static/img/cap.png', height='200px')
+        .black-overlay
+        v-container(fill-height fluid style="margin-top: auto; position: relative")
+          v-layout(fill-height align-end)
+            v-flex(xs12 flexbox)
+              v-avatar.indigo(style="margin-bottom: 10px")
+                v-icon(dark) account_circle
+                
+              div.title.grey--text.text--lighten-4 Pavel Gonzales
+              div.subheading.grey--text.text--lighten-4 Новичек
 
+      v-list
         router-link(v-for='(item, i) in items', :key='i', :to="item.route")
           v-list-tile(value='true', exact @click='')
             v-list-tile-action
@@ -22,7 +23,7 @@
           v-list-tile-action
             v-icon(light) exit_to_app
           v-list-tile-content
-            v-list-tile-title Logout
+            v-list-tile-title Выйти
     
     v-toolbar(fixed app :clipped-left='clipped'  dark color="primary" v-if='isLoggedIn')
       v-toolbar-side-icon(@click.stop='drawer = !drawer', dark)
@@ -51,28 +52,28 @@
         items: [
           {
             icon: 'home',
-            title: 'Main',
+            title: 'Главная',
             route: '/'
           },
           {
             icon: 'playlist_add_check',
-            title: 'Words',
+            title: 'Слова',
             route: 'words'
           },
           {
             icon: 'book',
-            title: 'Articles',
+            title: 'Статьи / тексты',
             route: 'articles'
           },
           {
             icon: 'extension',
-            title: 'Learn',
+            title: 'Обучение',
             route: 'learn'
           }
         ],
         right: true,
         rightDrawer: false,
-        title: 'Translater'
+        title: 'Учимся по статьям'
       }
     },
     mounted: function () {
@@ -99,12 +100,25 @@
 
 <style lang="stylus">
 
-  .unauth 
-    background: #69BD50 !important
-    background: -moz-linear-gradient(45deg, #69BD50 0%, #69bd50 100%) !important
-    background: -webkit-linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
-    background: linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
-  a 
-    text-decoration none
+.unauth 
+  background: #69BD50 !important
+  background: -moz-linear-gradient(45deg, #69BD50 0%, #69bd50 100%) !important
+  background: -webkit-linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
+  background: linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
+a 
+  text-decoration none
 
+.black-overlay
+  position absolute
+  width 100%
+  height 100%
+  &:after
+    content ''
+    display block
+    position absolute
+    top 0
+    left 0
+    right 0
+    bottom 0
+    background-color rgba(0,0,0,0.35)
 </style>

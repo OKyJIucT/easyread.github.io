@@ -31,7 +31,7 @@
 </template>
 
 <script>
- import { uuid } from 'vue-idb'
+import { uuid } from 'vue-idb'
 
 export default {
   name: 'article-card',
@@ -83,17 +83,5 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.black-overlay
-  position absolute
-  width 100%
-  height 100%
-  &:after
-    content ''
-    display block
-    position absolute
-    top 0
-    left 0
-    right 0
-    bottom 0
-    background-color rgba(0,0,0,0.6)
+
 </style>
