@@ -6,7 +6,7 @@
           v-radio-group(v-model="type" row)
             v-radio(label="Link" value="link")
             v-radio(label="Text" value="text")
-        
+
         v-flex(xs12 sm12 md8 offset-md2)
           div(v-if="type === 'link'")
             v-text-field(
@@ -31,50 +31,17 @@
             v-bind:size="120" 
             v-bind:width="3" 
             color="purple")
-        
-        // OG CARD =========================================================
-        v-flex(xs12 sm12 md8 offset-md2 v-if="og")
-          v-card
-            v-card-media(:src="og.ogImage.url" height="200px")
-            v-card-title(primary-title)
-              div
-                h3(class="headline mb-0") {{ og.ogTitle}}
-                div {{ og.ogDescription }}
-            v-card-actions
-              v-btn(flat color="orange" @click.native="addToList()") add to list
-              v-btn(flat color="orange" @click.native="parse()") parse
 
-        // TEXT CARD =======================================================
-        v-flex(xs12 sm12 md8 offset-md2 v-if="textLoaded")
-          v-card
-            v-card-media(src="http://lorempixel.com/400/200/" height="200px")
-            v-card-title(primary-title)
-              div
-                v-text-field(
-                  name="textTitle" 
-                  label="Title"
-                  v-model="textTitle")
-                //- h3(class="headline mb-0") {{ og.ogTitle}}
-
-                div {{ text }}
-            v-card-actions
-              v-btn(flat color="orange" @click.native="addToList()") add to list
-              v-btn(flat color="orange") study
-
-        //- v-flex(xs12 sm12 md8 offset-md2 v-if="isWordsLoading" class="text-xs-center")
-        //-   v-progress-circular(
-        //-     indeterminate 
-        //-     v-bind:size="120" 
-        //-     v-bind:width="3" 
-        //-     color="purple")
-        //- v-flex(xs12 sm12 md8 offset-md2 v-if="uniqTextArray.length")
-        //-   | Uniq words count {{ uniqWordsCount }}
-        //-   v-list
-        //-     v-list-tile(@click='add(item, i)' v-for="(item, i) in uniqTextArray", :key='i')
-        //-       v-list-tile-content {{ item.word }}
-        //-       v-list-tile-action
-        //-         v-icon(light) playlist_add
-
+        v-flex(xs12 sm12 md8 offset-md2)
+          article-card(
+            :img="'http://lorempixel.com/400/200/'"
+            :title="'title'"
+            :description="'Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.'"
+            :wordsCount="1488",
+            :uniqWordsCount="666"
+          )
+        v-flex(xs12 sm12 md8 offset-md2)
+          article-card
 
 </template>
 
@@ -83,6 +50,7 @@
   import { uuid } from 'vue-idb'
   import axios from 'axios'
   const API_URL = 'http://localhost:1488'
+  import ArticleCard from '@/components/ArticleCard'
 
   export default {
     data () {
@@ -103,6 +71,9 @@
     },
     mounted: function () {
       this.update()
+    },
+    components: {
+      'article-card': ArticleCard
     },
     methods: {
       update () {
