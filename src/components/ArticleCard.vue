@@ -14,21 +14,23 @@
         div Всего слов: {{ wordsCount || 0 }}
         div Уникальных слов: {{ uniqWordsCount || 0 }}
     v-card-actions
-      v-btn(flat color="orange") add to list
+      v-btn(flat color="orange" @click="addToArticles()") add to list
       v-btn(flat color="orange") study
 </template>
 
 <script>
+ import { uuid } from 'vue-idb'
+
 export default {
   name: 'article-card',
   data () {
     return {
       textTitle: null,
-      shortDescription: null
+      shortDescription: null,
+      id: uuid()
     }
   },
   mounted: function () {
-    console.log('CREATED')
     if (this.description) {
       this.shortDescription = `${this.description.split(' ').slice(0, 35).join(' ')}...`
     } else {
@@ -42,7 +44,23 @@ export default {
     'description',
     'wordsCount',
     'uniqWordsCount'
-  ]
+  ],
+  methods: {
+    addToArticles () {
+      this.$db.articles.add({
+        id: this.id,
+        img: this.img,
+        link: this.link,
+        title: this.title,
+        description: this.description,
+        wordsCount: this.wordsCount,
+        uniqWordsCount: this.uniqWordsCount
+      }).then(() => {
+        this.$store.commit('ADD_TO_ARTICLES', this.id)
+        console.log('done')
+      }).catch(console.log)
+    }
+  }
 }
 </script>
 

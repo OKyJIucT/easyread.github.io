@@ -1,6 +1,7 @@
 const LOGIN = 'LOGIN'
 const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 const LOGOUT = 'LOGOUT'
+const ADD_TO_ARTICLES = 'ADD_TO_ARTICLES'
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -9,7 +10,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLoggedIn: !!localStorage.getItem('token')
+    isLoggedIn: !!localStorage.getItem('token'),
+    articles: []
   },
   mutations: {
     [LOGIN] (state) {
@@ -21,6 +23,11 @@ export default new Vuex.Store({
     },
     [LOGOUT] (state) {
       state.isLoggedIn = false
+    },
+    [ADD_TO_ARTICLES] (state, payload) {
+      if (!state.articles.includes(payload)) {
+        state.articles.push(payload)
+      }
     }
   },
   actions: {
@@ -42,6 +49,9 @@ export default new Vuex.Store({
   getters: {
     isLoggedIn: state => {
       return state.isLoggedIn
+    },
+    articles: state => {
+      return state.articles
     }
   }
 })

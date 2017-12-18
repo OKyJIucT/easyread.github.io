@@ -32,16 +32,14 @@
             v-bind:width="3" 
             color="purple")
 
-        v-flex(xs12 sm12 md8 offset-md2)
+        v-flex(xs12 sm12 md8 offset-md2 v-if="isShowArticleCard")
           article-card(
-            :img="'http://lorempixel.com/400/200/'"
-            :title="'title'"
-            :description="'Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem inventore animi ut quidem distinctio earum deserunt. Nobis, ratione repellendus earum sed asperiores numquam cum eum incidunt ad dicta ducimus voluptas.'"
-            :wordsCount="1488",
-            :uniqWordsCount="666"
+            :img="''"
+            :title="''"
+            :description="text"
+            :wordsCount="''",
+            :uniqWordsCount="uniqWordsCount"
           )
-        v-flex(xs12 sm12 md8 offset-md2)
-          article-card
 
 </template>
 
@@ -66,7 +64,8 @@
         og: null,
         isOgLoading: false,
         isWordsLoading: false,
-        textLoaded: false
+        textLoaded: false,
+        isShowArticleCard: false
       }
     },
     mounted: function () {
@@ -108,6 +107,7 @@
           })
       },
       analyze () {
+        this.isShowArticleCard = true
         this.isOgLoading = true
         this.textLoaded = true
         const textArray = this.text.split(' ')
@@ -119,19 +119,6 @@
         console.log(this.uniqTextArray)
         this.uniqWordsCount = this.uniqTextArray.length
         this.isOgLoading = false
-      },
-      addToList () {
-        this.$db.articles.add({
-          id: uuid(),
-          image: 'http://lorempixel.com/400/200/',
-          name: this.textTitle,
-          words: this.uniqTextArray,
-          description: this.text,
-          progress: 16
-        }).then(() => {
-          console.log('done')
-          this.update()
-        }).catch(console.log)
       },
       add (word, index) {
         console.log(word)
