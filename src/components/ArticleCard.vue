@@ -1,21 +1,33 @@
 <template lang="pug">
   v-card
     v-card-media(:src="img || './../static/img/cap.png'" height="360px")
+      .black-overlay
+      v-progress-circular(
+        :size="100"
+        :width="15"
+        :rotate="-90"
+        :value="progress"
+        style="margin-top: auto; margin-left: 15px; margin-bottom: 15px"
+        color="green") {{ progress }}%
     v-card-title(primary-title)
       div(style="width: 100%")
         v-text-field(
           v-if="!title"
           name="textTitle" 
-          label="Title"
+          label="Заголовок"
           v-model="textTitle")
         h3(class="headline mb-0" v-if="title") {{ title }}
 
         div {{ shortDescription }}
-        div Всего слов: {{ wordsCount || 0 }}
-        div Уникальных слов: {{ uniqWordsCount || 0 }}
+        v-chip(color="green" text-color="white")
+          v-avatar(class="green darken-4") {{ wordsCount || 0 }}
+          | Всего слов
+        v-chip(color="green" text-color="white")
+          v-avatar(class="green darken-4") {{ uniqWordsCount || 0 }}
+          | Уникальных слов
     v-card-actions
-      v-btn(flat color="orange" @click="addToArticles()") add to list
-      v-btn(flat color="orange") study
+      v-btn(flat color="orange" @click="addToArticles()") Добавить в список
+      v-btn(flat color="orange") Учить
 </template>
 
 <script>
@@ -23,19 +35,25 @@
 
 export default {
   name: 'article-card',
-  data () {
+  data() {
     return {
       textTitle: null,
-      shortDescription: null,
       id: uuid()
     }
   },
-  mounted: function () {
-    if (this.description) {
-      this.shortDescription = `${this.description.split(' ').slice(0, 35).join(' ')}...`
-    } else {
-      this.shortDescription = 'Без описания'
+  computed: {
+    progress() {
+      return this.$store.getters.learnedWords.length * 100 / this.uniqWordsCount
+    },
+    shortDescription() {
+      if (this.description) {
+        return `${this.description.split(' ').slice(0, 35).join(' ')}...`
+      } else {
+        return 'Без описания'
+      }
     }
+  },
+  mounted: function() {
   },
   props: [
     'img',
@@ -46,7 +64,7 @@ export default {
     'uniqWordsCount'
   ],
   methods: {
-    addToArticles () {
+    addToArticles() {
       this.$db.articles.add({
         id: this.id,
         img: this.img,
@@ -64,6 +82,18 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-
+<style lang="stylus" scoped>
+.black-overlay
+  position absolute
+  width 100%
+  height 100%
+  &:after
+    content ''
+    display block
+    position absolute
+    top 0
+    left 0
+    right 0
+    bottom 0
+    background-color rgba(0,0,0,0.6)
 </style>

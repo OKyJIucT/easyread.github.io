@@ -11,7 +11,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLoggedIn: !!localStorage.getItem('token'),
-    articles: []
+    articles: [],
+    learnedWords: []
   },
   mutations: {
     [LOGIN] (state) {
@@ -47,11 +48,8 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    isLoggedIn: state => {
-      return state.isLoggedIn
-    },
-    articles: state => {
-      return state.articles
-    }
+    isLoggedIn: state => state.isLoggedIn,
+    articles: state => state.articles,
+    learnedWords: state => state.learnedWords
   }
 })
