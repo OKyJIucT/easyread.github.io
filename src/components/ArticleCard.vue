@@ -67,9 +67,9 @@ export default {
     addToArticles() {
       this.$db.articles.add({
         id: this.id,
-        img: this.img,
+        img: this.img || './../static/img/cap.png',
         link: this.link,
-        title: this.title,
+        title: this.title || this.textTitle || 'Без заголовка',
         description: this.description,
         wordsCount: this.wordsCount,
         uniqWordsCount: this.uniqWordsCount
