@@ -34,6 +34,8 @@
 
         v-flex(xs12 sm12 md8 offset-md2 v-if="isShowArticleCard")
           article-card(
+            @added="clear()"
+            :isNew="true"
             :img="''"
             :title="''"
             :description="text"
@@ -61,10 +63,8 @@
         words: [],
         modelLink: '',
         textTitle: '',
-        og: null,
         isOgLoading: false,
         isWordsLoading: false,
-        textLoaded: false,
         isShowArticleCard: false
       }
     },
@@ -75,6 +75,15 @@
       'article-card': ArticleCard
     },
     methods: {
+      clear() {
+        this.modelLink = ''
+        this.textTitle = ''
+        this.text = null
+        this.link = null
+        this.isOgLoading = false
+        this.isWordsLoading = false
+        this.isShowArticleCard = false
+      },
       update () {
         this.$db.words.toArray().then((words) => {
           console.log(words)
@@ -109,7 +118,6 @@
       analyze () {
         this.isShowArticleCard = true
         this.isOgLoading = true
-        this.textLoaded = true
         const textArray = this.text.split(' ')
         const sortUniq = _.uniq(textArray).filter((item) => {
           return item.match(/^[a-zA-Z]+$/)

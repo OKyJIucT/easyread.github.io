@@ -26,8 +26,8 @@
           v-avatar(class="green darken-4") {{ uniqWordsCount || 0 }}
           | Уникальных слов
     v-card-actions
-      v-btn(flat color="orange" @click="addToArticles()") Добавить в список
-      v-btn(flat color="orange" @click="removeFromArticles()") Удалить
+      v-btn(flat color="orange" v-if="isNew" @click="addToArticles()") Добавить в список
+      v-btn(flat color="orange" v-if="!isNew" @click="removeFromArticles()") Удалить
       v-btn(flat color="orange") Учить
 </template>
 
@@ -58,6 +58,7 @@ export default {
   },
   props: [
     'article',
+    'isNew',
     'img',
     'link',
     'title',
@@ -77,6 +78,7 @@ export default {
         uniqWordsCount: this.uniqWordsCount
       }).then(() => {
         this.$store.commit('ADD_TO_ARTICLES', this.id)
+        this.$emit('added')
       }).catch(console.log)
     },
 
