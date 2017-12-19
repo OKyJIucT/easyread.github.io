@@ -1,29 +1,29 @@
 <template lang="pug">
   v-card
-    v-card-media(:src="img || './../static/img/cap.png'" height="360px")
+    v-card-media(:src="article.img || './../static/img/cap.png'" height="360px")
       .black-overlay
       v-progress-circular(
         :size="100"
         :width="15"
         :rotate="-90"
-        :value="progress"
+        :value="article.progress"
         style="margin-top: auto; margin-left: 15px; margin-bottom: 15px"
-        color="green") {{ progress }}%
+        color="green") {{ article.progress }}%
     v-card-title(primary-title)
       div(style="width: 100%")
         v-text-field(
-          v-if="!title"
-          name="textTitle" 
+          v-if="!article.title"
+          name="title" 
           label="Заголовок"
-          v-model="textTitle")
-        h3(class="headline mb-0" v-if="title") {{ title }}
+          v-model="title")
+        h3(class="headline mb-0" v-if="article.title") {{ rticle.title }}
 
         div {{ shortDescription }}
         v-chip(color="green" text-color="white")
-          v-avatar(class="green darken-4") {{ wordsCount || 0 }}
+          v-avatar(class="green darken-4") {{ article.wordsCount || 0 }}
           | Всего слов
         v-chip(color="green" text-color="white")
-          v-avatar(class="green darken-4") {{ uniqWordsCount || 0 }}
+          v-avatar(class="green darken-4") {{ article.uniqWordsCount || 0 }}
           | Уникальных слов
     v-card-actions
       v-btn(flat color="orange" v-if="isNew" @click="addToArticles()") Добавить в список
@@ -38,44 +38,36 @@ export default {
   name: 'article-card',
   data() {
     return {
-      textTitle: null,
+      title: null,
       id: uuid()
     }
   },
   computed: {
     progress() {
-      return this.$store.getters.learnedWords.length * 100 / this.uniqWordsCount
+      return this.$store.getters.learnedWords.length * 100 / this.article.uniqWordsCount
     },
     shortDescription() {
-      if (this.description) {
-        return `${this.description.split(' ').slice(0, 35).join(' ')}...`
+      if (this.article.text) {
+        return `${this.article.text.split(' ').slice(0, 35).join(' ')}...`
       } else {
         return 'Без описания'
       }
     }
   },
-  mounted: function() {
-  },
   props: [
     'article',
-    'isNew',
-    'img',
-    'link',
-    'title',
-    'description',
-    'wordsCount',
-    'uniqWordsCount'
+    'isNew'
   ],
   methods: {
     addToArticles() {
       this.$db.articles.add({
-        id: this.id,
-        img: this.img || './../static/img/cap.png',
-        link: this.link,
-        title: this.title || this.textTitle || 'Без заголовка',
-        description: this.description,
-        wordsCount: this.wordsCount,
-        uniqWordsCount: this.uniqWordsCount
+        id: this.article.id,
+        img: this.article.img || './../static/img/cap.png',
+        link: this.article.link,
+        title: this.article.title || this.title || 'Без заголовка',
+        wordsCount: this.article.wordsCount,
+        description: this.article.description,
+        uniqWordsCount: this.article.uniqWordsCount
       }).then(() => {
         this.$store.commit('ADD_TO_ARTICLES', this.id)
         this.$emit('added')
@@ -88,7 +80,6 @@ export default {
         .equals(this.article.id)
         .delete()
         .then((deleteCount) => {
-          console.log(`Deleted ${deleteCount} objects`)
           this.$store.dispatch('updateArticles')
           this.$emit('remove')
         }).catch(console.log)

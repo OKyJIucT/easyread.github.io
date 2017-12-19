@@ -3,6 +3,7 @@ const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 const LOGOUT = 'LOGOUT'
 const ADD_TO_ARTICLES = 'ADD_TO_ARTICLES'
 const UPDATE_ARTICLES = 'UPDATE_ARTICLES'
+const UPDATE_LEARNED_WORDS = 'UPDATE_LEARNED_WORDS'
 
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -36,14 +37,21 @@ export default new Vuex.Store({
     },
     [UPDATE_ARTICLES] (state, payload) {
       state.articles = payload
+    },
+    [UPDATE_LEARNED_WORDS] (state, payload) {
+      state.learnedWords = payload
     }
   },
   modules: idb.modules,
   actions: {
     updateArticles({ commit }) {
       db.articles.toArray().then((articles) => {
-        console.log(articles)
         commit(UPDATE_ARTICLES, articles)
+      }).catch(console.log)
+    },
+    updateLearnedWords({ commit }) {
+      db.learnedWords.toArray().then((words) => {
+        commit(UPDATE_LEARNED_WORDS, words)
       }).catch(console.log)
     },
     login({ commit }, creds) {

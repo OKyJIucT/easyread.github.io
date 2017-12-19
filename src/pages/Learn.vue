@@ -40,18 +40,16 @@
     },
     methods: {
       update () {
-        this.$db.words.toArray().then((words) => {
+        this.$db.words.toArray()
+        .then((words) => {
           this.words = words
         }).then((words) => {
           this.activeWord = this.words[0]
-        }).catch((err) => {
-          console.log(err)
-        })
-        this.$db.learnedWords.toArray().then((words) => {
-          console.log(words)
-        }).catch((err) => {
-          console.log(err)
-        })
+        }).catch(console.log)
+
+        this.$db.learnedWords.toArray()
+        .then(console.log)
+        .catch(console.log)
       },
       swipe (direction) {
         this.swipeDirection = direction
@@ -60,22 +58,21 @@
         window.responsiveVoice.speak(word)
       },
       addToStudied (word) {
-        console.log('add to studied')
         this.$db.learnedWords.add({
           id: word.id,
           word: word.word,
           translate: '',
           learned: true
         }).then((id) => {
-          this.$db.words.where('id').equals(id).delete().then(this.update).catch((err) => {
-            console.log(err)
-          })
-        }).catch((err) => {
-          console.log(err)
-        })
+          this.$db.words
+            .where('id')
+            .equals(id)
+            .delete()
+            .then(this.update)
+            .catch(console.log)
+        }).catch(console.log)
       },
       addToStudy (word) {
-        console.log('add to study')
         this.toLearnWords.push(word)
       }
     }

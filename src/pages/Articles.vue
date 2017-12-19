@@ -37,17 +37,12 @@
     mounted() {
       this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'UPDATE_ARTICLES') {
-          console.log('mutation.type ===>>> ', mutation.type)
-          console.log('state.articles ===>>> ', state.articles)
           this.articles = state.articles
         }
       })
       this.$db.articles.toArray().then((articles) => {
-        console.log(articles)
         this.articles = articles
-      }).catch((err) => {
-        console.log(err)
-      })
+      }).catch(console.log)
     }
   }
 </script>

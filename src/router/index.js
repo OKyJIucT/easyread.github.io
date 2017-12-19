@@ -46,10 +46,8 @@ const router = new Router({
 
 function requireAuth (to, from, next) {
   if (store.getters.isLoggedIn) {
-    console.log('resolve router')
     next()
   } else {
-    console.log('redirect to auth')
     next('/auth')
   }
 }
