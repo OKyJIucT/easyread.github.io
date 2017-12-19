@@ -27,6 +27,7 @@
           | Уникальных слов
     v-card-actions
       v-btn(flat color="orange" @click="addToArticles()") Добавить в список
+      v-btn(flat color="orange" @click="removeFromArticles()") Удалить
       v-btn(flat color="orange") Учить
 </template>
 
@@ -56,6 +57,7 @@ export default {
   mounted: function() {
   },
   props: [
+    'article',
     'img',
     'link',
     'title',
@@ -75,8 +77,19 @@ export default {
         uniqWordsCount: this.uniqWordsCount
       }).then(() => {
         this.$store.commit('ADD_TO_ARTICLES', this.id)
-        console.log('done')
       }).catch(console.log)
+    },
+
+    removeFromArticles() {
+      this.$db.articles
+        .where('id')
+        .equals(this.article.id)
+        .delete()
+        .then((deleteCount) => {
+          console.log(`Deleted ${deleteCount} objects`)
+          this.$store.dispatch('updateArticles')
+          this.$emit('remove')
+        }).catch(console.log)
     }
   }
 }

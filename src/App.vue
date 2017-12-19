@@ -10,7 +10,7 @@
                 v-icon(dark) account_circle
                 
               div.title.grey--text.text--lighten-4 Pavel Gonzales
-              div.subheading.grey--text.text--lighten-4 Новичек
+              div.subheading.grey--text.text--lighten-4 Супер-юзер
 
       v-list
         router-link(v-for='(item, i) in items', :key='i', :to="item.route")
