@@ -16,7 +16,7 @@
           name="title" 
           label="Заголовок"
           v-model="title")
-        h3(class="headline mb-0" v-if="article.title") {{ rticle.title }}
+        h3(class="headline mb-0" v-if="article.title") {{ article.title }}
 
         div {{ shortDescription }}
         v-chip(color="green" text-color="white")

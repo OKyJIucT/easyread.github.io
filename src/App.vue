@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app(light :class="{ unauth: !isLoggedIn }")
+  v-app(light)
     v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app  v-if='isLoggedIn')
       v-card-media(src='/static/img/cap.png', height='200px')
         .black-overlay
@@ -101,11 +101,6 @@
 
 <style lang="stylus">
 
-.unauth 
-  background: #69BD50 !important
-  background: -moz-linear-gradient(45deg, #69BD50 0%, #69bd50 100%) !important
-  background: -webkit-linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
-  background: linear-gradient(45deg, #69BD50 0%,#69bd50 100%) !important
 a 
   text-decoration none
 

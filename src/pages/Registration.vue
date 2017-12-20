@@ -3,28 +3,28 @@
     v-container(fill-height)
       v-flex(xs12 sm8 md6 lg5 offset-lg3 offset-md3 offset-sm2)
         v-toolbar(dark color="primary")
-          v-toolbar-title.white--text Вход
+          v-toolbar-title.white--text Регистрация
               
         v-card
           v-container
             v-flex(class="mb-2" center)
-              .headlinefont.text-xs-center Войти через
+              .headlinefont.text-xs-center Регистрация через
             v-layout(row wrap)
-              v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
+              v-flex(class="mb-2 pl-2 pr-2" xs12 sm4)
                 v-btn(
                   :loading="loading2"
                   @click.native="loader = 'loading2'"
                   :disabled="loading2"
                   style="background-color: #45609B"
                   class="white--text ma-0 w-100") Facebook
-              v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
+              v-flex(class="mb-2 pl-2 pr-2" xs12 sm4)
                 v-btn(
                   :loading="loading3"
                   @click.native="loader = 'loading3'"
                   :disabled="loading3"
                   style="background-color: #4E6D92"
                   class="white--text ma-0 w-100") Вконтакте
-              v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
+              v-flex(class="mb-2 pl-2 pr-2" xs12 sm4)
                 v-btn(
                   :loading="loading4"
                   @click.native="loader = 'loading4'"
@@ -47,18 +47,29 @@
                     v-model="password"
                     :rules="passwordRules"
                     required)
+                v-flex(xs12 class="mb-2 pl-2 pr-2")
+                  v-text-field(
+                    label="Повторите пароль"
+                    v-model="confirmPassword"
+                    :rules="passwordRules"
+                    required)
+                v-flex(xs12 class="mb-2 pl-2 pr-2")
+                  v-checkbox(
+                    label="Я согласен со всеми правилами"
+                    v-model="agree"
+                    :rules="[v => !!v || 'Вы должны подтвердить согласие!']"
+                    required)
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
                   v-btn(
-                    :loading="loading1"
-                    @click.native="login()"
-                    :disabled="loading1"
-                    color="light-green"
-                    class="white--text ma-0 w-100") Войти
+                    color="grey lighten-3"
+                    class="ma-0 w-100") Регистрация
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
-                  router-link(to="registration")
+                  router-link(to="auth")
                     v-btn(
-                      color="grey lighten-3"
-                      class="ma-0 w-100") Регистрация
+                      :loading="loading1"
+                      :disabled="loading1"
+                      color="light-green"
+                      class="white--text ma-0 w-100") Войти
 
 </template>
 
@@ -66,6 +77,7 @@
   export default {
     data () {
       return {
+        agree: false,
         loader: null,
         loading1: false,
         loading2: false,
@@ -73,6 +85,7 @@
         loading4: false,
         valid: false,
         password: '',
+        confirmPassword: '',
         passwordRules: [
           (v) => !!v || 'Вы забыли ввести пароль',
           (v) => v.length <= 10 || 'password must be less than 10 characters'

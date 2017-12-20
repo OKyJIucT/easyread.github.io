@@ -9,16 +9,8 @@
             v-bind:width="3" 
             color="purple")
         
-        v-flex(xs12 sm12 md8 offset-md2 v-for="(item, i) in articles", :key="i")
-          article-card(
-            :article="item"
-            :img="item.img"
-            :title="item.title"
-            :description="item.description"
-            :wordsCount="item.wordsCount",
-            :uniqWordsCount="item.uniqWordsCount")
-         
-
+        v-flex(xs12 sm12 md8 offset-md2 v-for="(article, i) in articles", :key="i")
+          article-card(:article="article")
 </template>
 
 <script>
