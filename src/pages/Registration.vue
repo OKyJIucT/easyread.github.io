@@ -62,6 +62,7 @@
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
                   v-btn(
                     color="grey lighten-3"
+                    @click.native="registration()"
                     class="ma-0 w-100") Регистрация
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
                   router-link(to="auth")
@@ -98,7 +99,7 @@
       }
     },
     watch: {
-      loader () {
+      loader() {
         const l = this.loader
         this[l] = !this[l]
 
@@ -108,9 +109,9 @@
       }
     },
     methods: {
-      login () {
+      registration() {
         this.loader = 'loading1'
-        this.$store.dispatch('login', {
+        this.$store.dispatch('registration', {
           email: this.email,
           password: this.password
         }).then(() => {
