@@ -52,7 +52,7 @@
                     :loading="loading1"
                     @click.native="login()"
                     :disabled="loading1"
-                    color="light-green"
+                    color="primary"
                     class="white--text ma-0 w-100") Войти
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
                   router-link(to="registration")

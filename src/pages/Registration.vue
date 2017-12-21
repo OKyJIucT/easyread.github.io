@@ -69,7 +69,7 @@
                     v-btn(
                       :loading="loading1"
                       :disabled="loading1"
-                      color="light-green"
+                      color="primary"
                       class="white--text ma-0 w-100") Войти
 
 </template>
