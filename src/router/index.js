@@ -42,7 +42,7 @@ const router = new Router({
       beforeEnter: requireAuth
     },
     {
-      path: '/learn',
+      path: '/study/:id',
       name: 'Learn',
       component: Learn,
       beforeEnter: requireAuth

@@ -114,7 +114,7 @@
   background-size cover
   background-repeat no-repeat
   background-position center center
-  background-image url('./../../static/2.png')
+  background-image url('./../../static/1.png')
 .w-100
   width 100%
 

@@ -34,6 +34,7 @@
       })
       this.$db.articles.toArray().then((articles) => {
         this.articles = articles
+        console.log(articles)
       }).catch(console.log)
     }
   }
