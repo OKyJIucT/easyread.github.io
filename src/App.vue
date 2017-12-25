@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app(light)
     v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app  v-if='isLoggedIn')
-      v-card-media(src='/static/img/cap.png', height='200px')
+      v-card-media(src='/static/1.png', height='200px')
         .black-overlay
         v-container(fill-height fluid style="margin-top: auto; position: relative")
           v-layout(fill-height align-end)
@@ -59,17 +59,17 @@
           {
             icon: 'playlist_add_check',
             title: 'Слова',
-            route: 'words'
+            route: '/words'
           },
           {
             icon: 'book',
             title: 'Статьи / тексты',
-            route: 'articles'
+            route: '/articles'
           },
           {
             icon: 'extension',
             title: 'Обучение',
-            route: 'learn'
+            route: '/study'
           }
         ],
         right: true,

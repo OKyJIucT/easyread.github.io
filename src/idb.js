@@ -8,7 +8,7 @@ export const idb = new VueIdb({
   database: 'wordsdb',
   schemas: [
     { words: 'id, word, translate' },
-    { learnedWords: 'id, word, translate, learned' },
-    { articles: 'id, name, description, words, progress' }
+    { learnedWords: 'id, word, translate' },
+    { articles: 'id, name, text, words, progress' }
   ]
 })

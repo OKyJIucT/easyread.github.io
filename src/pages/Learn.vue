@@ -1,9 +1,18 @@
 <template lang="pug">
   v-content
-    v-container(fluid style="height: 100%")
+    v-card-media(v-if="article" :src="article.img" height="360px")
+      .black-overlay
+      v-progress-circular(
+        :size="100"
+        :width="15"
+        :rotate="-90"
+        :value="article.progress"
+        style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative"
+        color="green") {{ article.progress || 0 }}%
+      h3.display-2.white--text(style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative") {{ article.title }}
+    v-container(fluid)
       v-layout(
         column
-        style="height: 100%"
         align-center
         justify-center
         v-touch="detectSwipe")
@@ -25,6 +34,7 @@
       return {
         words: [],
         toLearnWords: [],
+        article: null,
         activeWord: null,
         swipeDirection: 'None',
         detectSwipe: {
@@ -37,6 +47,10 @@
     },
     mounted: function () {
       this.update()
+       this.$db.articles.get({id: this.$route.params.id}, (res) => {
+         this.article = res
+         console.log(res)
+       })
     },
     methods: {
       update () {

@@ -69,7 +69,7 @@
                     v-btn(
                       :loading="loading1"
                       :disabled="loading1"
-                      color="light-green"
+                      color="primary"
                       class="white--text ma-0 w-100") Войти
 
 </template>
@@ -128,7 +128,7 @@
   background-size cover
   background-repeat no-repeat
   background-position center center
-  background-image url('./../../static/2.png')
+  background-image url('./../../static/1.png')
 .w-100
   width 100%
 
