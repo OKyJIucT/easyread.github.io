@@ -75,51 +75,51 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        agree: false,
-        loader: null,
-        loading1: false,
-        loading2: false,
-        loading3: false,
-        loading4: false,
-        valid: false,
-        password: '',
-        confirmPassword: '',
-        passwordRules: [
-          (v) => !!v || 'Вы забыли ввести пароль',
-          (v) => v.length <= 10 || 'password must be less than 10 characters'
-        ],
-        email: '',
-        emailRules: [
-          (v) => !!v || 'Вы забыли ввести e-mail'
-          // (v) => emailRegexp.test(v) || 'E-mail must be valid'
-        ]
-      }
-    },
-    watch: {
-      loader() {
-        const l = this.loader
-        this[l] = !this[l]
+export default {
+  data () {
+    return {
+      agree: false,
+      loader: null,
+      loading1: false,
+      loading2: false,
+      loading3: false,
+      loading4: false,
+      valid: false,
+      password: '',
+      confirmPassword: '',
+      passwordRules: [
+        (v) => !!v || 'Вы забыли ввести пароль',
+        (v) => v.length <= 10 || 'password must be less than 10 characters'
+      ],
+      email: '',
+      emailRules: [
+        (v) => !!v || 'Вы забыли ввести e-mail'
+        // (v) => emailRegexp.test(v) || 'E-mail must be valid'
+      ]
+    }
+  },
+  watch: {
+    loader() {
+      const l = this.loader
+      this[l] = !this[l]
 
-        setTimeout(() => (this[l] = false), 3000)
+      setTimeout(() => (this[l] = false), 3000)
 
-        this.loader = null
-      }
-    },
-    methods: {
-      registration() {
-        this.loader = 'loading1'
-        this.$store.dispatch('registration', {
-          email: this.email,
-          password: this.password
-        }).then(() => {
-          this.$router.push('/')
-        })
-      }
+      this.loader = null
+    }
+  },
+  methods: {
+    registration() {
+      this.loader = 'loading1'
+      this.$store.dispatch('registration', {
+        email: this.email,
+        password: this.password
+      }).then(() => {
+        this.$router.push('/')
+      })
     }
   }
+}
 </script>
 
 <style lang="stylus" scoped>

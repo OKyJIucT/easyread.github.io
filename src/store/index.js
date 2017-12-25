@@ -4,14 +4,14 @@ const LOGOUT = 'LOGOUT'
 const ADD_TO_ARTICLES = 'ADD_TO_ARTICLES'
 const UPDATE_ARTICLES = 'UPDATE_ARTICLES'
 const UPDATE_LEARNED_WORDS = 'UPDATE_LEARNED_WORDS'
-const API_URL = 'https://mern-todoapp.herokuapp.com'
 
+import firebase from 'firebase'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { idb } from './../idb'
-import axios from 'axios'
 
 const db = idb.db
+const $router = this.$router
 
 Vue.use(Vuex)
 
@@ -62,17 +62,20 @@ export default new Vuex.Store({
       commit(LOGIN)
       return new Promise(resolve => {
         setTimeout(() => {
-          localStorage.setItem('token', 'JWT')
+          localStorage.setItem('token', creds)
           commit(LOGIN_SUCCESS)
           resolve()
         }, 1000)
       })
     },
     registration({ commit }, creds) {
-      commit(LOGIN)
-      axios.post(`${API_URL}/users/login`, creds).then((res) => {
+      firebase.auth().createUserWithEmailAndPassword(creds.email, creds.password)
+      .then((res) => {
         console.log(res)
-        commit(LOGIN_SUCCESS, res)
+        commit(LOGIN, res.refreshToken)
+        $router.push('/')
+      }).catch((err) => {
+        console.log('Ошибка', err)
       })
     },
     logout({ commit }) {

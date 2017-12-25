@@ -9,10 +9,23 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { idb } from './idb'
+import firebase from 'firebase'
 
 Vue.use(Vuetify)
 Vue.use(Vuex)
 Vue.config.productionTip = false
+
+// Initialize Firebase
+const config = {
+  apiKey: 'AIzaSyB7ObifhTX1-mCmidN_WlIt5MfX2yyOxKw',
+  authDomain: 'e-lingo.firebaseapp.com',
+  databaseURL: 'https://e-lingo.firebaseio.com',
+  projectId: 'e-lingo',
+  storageBucket: '',
+  messagingSenderId: '939796598497'
+}
+
+firebase.initializeApp(config)
 
 /* eslint-disable no-new */
 new Vue({
