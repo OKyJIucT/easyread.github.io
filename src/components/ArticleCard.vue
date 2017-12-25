@@ -29,6 +29,8 @@
       v-btn(flat color="orange" v-if="isNew" @click="addToArticles()") Добавить в список
       v-btn(flat color="orange" v-if="!isNew" @click="removeFromArticles()") Удалить
       v-btn(flat color="orange" @click="goStudy()") Учить
+      v-btn(flat color="orange" v-if="!isNew" @click="read()") Читать
+
 </template>
 
 <script>
@@ -87,6 +89,9 @@ export default {
     goStudy() {
       console.log('go study')
       this.$router.push({path: `study/${this.article.id}`})
+    },
+    read() {
+      this.$router.push({path: `article/${this.article.id}`})
     }
   }
 }

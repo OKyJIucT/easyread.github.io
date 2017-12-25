@@ -4,6 +4,7 @@ import Main from '@/pages/Main'
 import Auth from '@/pages/Auth'
 import Words from '@/pages/Words'
 import Learn from '@/pages/Learn'
+import Article from '@/pages/Article'
 import Articles from '@/pages/Articles'
 import Registration from '@/pages/Registration'
 import store from '@/store'
@@ -45,6 +46,12 @@ const router = new Router({
       path: '/study/:id',
       name: 'Learn',
       component: Learn,
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/article/:id',
+      name: 'Learn',
+      component: Article,
       beforeEnter: requireAuth
     }
   ]
