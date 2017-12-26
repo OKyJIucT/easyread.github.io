@@ -1,0 +1,6 @@
+export const LOGIN = 'LOGIN'
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGOUT = 'LOGOUT'
+export const ADD_TO_ARTICLES = 'ADD_TO_ARTICLES'
+export const UPDATE_ARTICLES = 'UPDATE_ARTICLES'
+export const UPDATE_LEARNED_WORDS = 'UPDATE_LEARNED_WORDS'

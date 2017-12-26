@@ -44,13 +44,13 @@ const router = new Router({
     },
     {
       path: '/study/:id',
-      name: 'Learn',
+      name: 'Study',
       component: Learn,
       beforeEnter: requireAuth
     },
     {
       path: '/article/:id',
-      name: 'Learn',
+      name: 'Article',
       component: Article,
       beforeEnter: requireAuth
     }

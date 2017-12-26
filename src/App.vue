@@ -9,7 +9,7 @@
               v-avatar.indigo(style="margin-bottom: 10px")
                 v-icon(dark) account_circle
                 
-              div.title.grey--text.text--lighten-4 Pavel Gonzales
+              div.title.grey--text.text--lighten-4 {{ user.email }}
               div.subheading.grey--text.text--lighten-4 Супер-юзер
 
       v-list
@@ -82,9 +82,14 @@
     },
     created () {
       console.log('isLoggedIn ===>>>>', this.isLoggedIn)
+      this.$store.dispatch('me')
     },
     computed: {
-      isLoggedIn () {
+      user() {
+        console.log(this.$store.getters.user)
+        return this.$store.getters.user
+      },
+      isLoggedIn() {
         return this.$store.getters.isLoggedIn
       }
     },

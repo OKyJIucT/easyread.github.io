@@ -1,18 +1,14 @@
-const LOGIN = 'LOGIN'
-const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-const LOGOUT = 'LOGOUT'
-const ADD_TO_ARTICLES = 'ADD_TO_ARTICLES'
-const UPDATE_ARTICLES = 'UPDATE_ARTICLES'
-const UPDATE_LEARNED_WORDS = 'UPDATE_LEARNED_WORDS'
-
-import firebase from 'firebase'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { idb } from './../idb'
-
-const db = idb.db
-const $router = this.$router
-
+import actions from './actions'
+import {
+  LOGIN,
+  LOGOUT,
+  UPDATE_ARTICLES,
+  UPDATE_LEARNED_WORDS,
+  ADD_TO_ARTICLES
+} from './mutations'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -23,16 +19,13 @@ export default new Vuex.Store({
     learnedWords: []
   },
   mutations: {
-    [LOGIN] (state) {
-      state.pending = true
-    },
-    [LOGIN_SUCCESS] (state, payload) {
+    [LOGIN] (state, payload) {
       state.isLoggedIn = true
-      state.pending = false
       state.user = payload
     },
     [LOGOUT] (state) {
       state.isLoggedIn = false
+      state.user = null
     },
     [ADD_TO_ARTICLES] (state, payload) {
       if (!state.articles.includes(payload)) {
@@ -46,47 +39,13 @@ export default new Vuex.Store({
       state.learnedWords = payload
     }
   },
-  modules: idb.modules,
-  actions: {
-    updateArticles({ commit }) {
-      db.articles.toArray().then((articles) => {
-        commit(UPDATE_ARTICLES, articles)
-      }).catch(console.log)
-    },
-    updateLearnedWords({ commit }) {
-      db.learnedWords.toArray().then((words) => {
-        commit(UPDATE_LEARNED_WORDS, words)
-      }).catch(console.log)
-    },
-    login({ commit }, creds) {
-      commit(LOGIN)
-      return new Promise(resolve => {
-        setTimeout(() => {
-          localStorage.setItem('token', creds)
-          commit(LOGIN_SUCCESS)
-          resolve()
-        }, 1000)
-      })
-    },
-    registration({ commit }, creds) {
-      firebase.auth().createUserWithEmailAndPassword(creds.email, creds.password)
-      .then((res) => {
-        console.log(res)
-        commit(LOGIN, res.refreshToken)
-        $router.push('/')
-      }).catch((err) => {
-        console.log('Ошибка', err)
-      })
-    },
-    logout({ commit }) {
-      localStorage.removeItem('token')
-      commit(LOGOUT)
-    }
-  },
   getters: {
     isLoggedIn: state => state.isLoggedIn,
     articles: state => state.articles,
-    learnedWords: state => state.learnedWords
+    learnedWords: state => state.learnedWords,
+    user: state => state.user
   },
+  actions: actions,
+  modules: idb.modules,
   plugins: [ idb.plugin ]
 })

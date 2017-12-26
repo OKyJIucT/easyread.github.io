@@ -13,7 +13,7 @@
               v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
                 v-btn(
                   :loading="loading2"
-                  @click.native="loader = 'loading2'"
+                  @click.native="loginFacebook()"
                   :disabled="loading2"
                   style="background-color: #45609B"
                   class="white--text ma-0 w-100") Facebook
@@ -72,12 +72,12 @@
         loading3: false,
         loading4: false,
         valid: false,
-        password: '',
+        password: 'qwerty',
         passwordRules: [
           (v) => !!v || 'Вы забыли ввести пароль',
           (v) => v.length <= 10 || 'password must be less than 10 characters'
         ],
-        email: '',
+        email: 'develop.gonzales@gmail.com',
         emailRules: [
           (v) => !!v || 'Вы забыли ввести e-mail'
           // (v) => emailRegexp.test(v) || 'E-mail must be valid'
@@ -85,7 +85,7 @@
       }
     },
     watch: {
-      loader () {
+      loader() {
         const l = this.loader
         this[l] = !this[l]
 
@@ -95,14 +95,16 @@
       }
     },
     methods: {
-      login () {
+      login() {
         this.loader = 'loading1'
         this.$store.dispatch('login', {
           email: this.email,
           password: this.password
-        }).then(() => {
-          this.$router.push('/')
         })
+      },
+      loginFacebook() {
+        this.loader = 'loading2'
+        this.$store.dispatch('loginFacebook')
       }
     }
   }
