@@ -29,22 +29,28 @@ export default {
     })
   },
   login({ commit }, creds) {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(creds.email, creds.password)
-      .then((res) => {
-        commit(LOGIN, res)
-        router.push('/')
-      }).catch(console.log)
+    return Promise.resolve().then(() => {
+      return firebase
+        .auth()
+        .signInWithEmailAndPassword(creds.email, creds.password)
+        .then((res) => {
+          commit(LOGIN, res)
+          router.push('/')
+          return res
+        }).catch(console.log)
+    })
   },
   loginFacebook({ commit }) {
     const provider = new firebase.auth.FacebookAuthProvider()
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((res) => {
-        commit(LOGIN, res.user)
-      })
+    return Promise.resolve().then(() => {
+      return firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then((res) => {
+          commit(LOGIN, res.user)
+          return res.user
+        }).catch(console.log)
+    })
   },
   logout({ commit }) {
     firebase

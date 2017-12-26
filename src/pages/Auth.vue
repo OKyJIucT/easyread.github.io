@@ -10,25 +10,25 @@
             v-flex(class="mb-2" center)
               .headlinefont.text-xs-center Войти через
             v-layout(row wrap)
-              v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
+              v-flex(class="mb-2 pl-2 pr-2" sm6 xs12)
                 v-btn(
-                  :loading="loading2"
-                  @click.native="loginFacebook()"
-                  :disabled="loading2"
+                  @click.native="loginWithFacebook()"
+                  :loading="loadingFacebook"
+                  :disabled="loadingFacebook"
                   style="background-color: #45609B"
                   class="white--text ma-0 w-100") Facebook
-              v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
+              //- v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
+              //-   v-btn(
+              //-     :loading="loading3"
+              //-     @click.native="loader = 'loading3'"
+              //-     :disabled="loading3"
+              //-     style="background-color: #4E6D92"
+              //-     class="white--text ma-0 w-100") Вконтакте
+              v-flex(class="mb-2 pl-2 pr-2" sm6 xs12)
                 v-btn(
-                  :loading="loading3"
-                  @click.native="loader = 'loading3'"
-                  :disabled="loading3"
-                  style="background-color: #4E6D92"
-                  class="white--text ma-0 w-100") Вконтакте
-              v-flex(class="mb-2 pl-2 pr-2" sm4 xs12)
-                v-btn(
-                  :loading="loading4"
-                  @click.native="loader = 'loading4'"
-                  :disabled="loading4"
+                  @click.native="loginWithGoogle()"
+                  :loading="loadingGoogle"
+                  :disabled="loadingGoogle"
                   style="background-color: #E15547"
                   class="white--text ma-0 w-100") Google
             v-flex(class="mt-3" center)
@@ -39,19 +39,24 @@
                   v-text-field(
                     label="E-mail"
                     v-model="email"
+                    prepend-icon="email"
                     :rules="emailRules"
                     required)
                 v-flex(xs12 class="mb-2 pl-2 pr-2")
                   v-text-field(
                     label="Пароль"
                     v-model="password"
+                    prepend-icon="lock"
+                    :append-icon="visible ? 'visibility' : 'visibility_off'"
+                    :append-icon-cb="() => (visible = !visible)"
+                    :type="visible ? 'text' : 'password'"
                     :rules="passwordRules"
                     required)
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
                   v-btn(
-                    :loading="loading1"
                     @click.native="login()"
-                    :disabled="loading1"
+                    :loading="loadingLogin"
+                    :disabled="loadingLogin"
                     color="primary"
                     class="white--text ma-0 w-100") Войти
                 v-flex(class="mb-2" sm6 xs12 class="pl-2 pr-2")
@@ -66,11 +71,10 @@
   export default {
     data () {
       return {
-        loader: null,
-        loading1: false,
-        loading2: false,
-        loading3: false,
-        loading4: false,
+        visible: false,
+        loadingLogin: false,
+        loadingGoogle: false,
+        loadingFacebook: false,
         valid: false,
         password: 'qwerty',
         passwordRules: [
@@ -84,27 +88,27 @@
         ]
       }
     },
-    watch: {
-      loader() {
-        const l = this.loader
-        this[l] = !this[l]
-
-        setTimeout(() => (this[l] = false), 3000)
-
-        this.loader = null
-      }
-    },
     methods: {
       login() {
-        this.loader = 'loading1'
+        this.loadingLogin = true
         this.$store.dispatch('login', {
           email: this.email,
           password: this.password
+        }).then((res) => {
+          this.loadingLogin = false
         })
       },
-      loginFacebook() {
-        this.loader = 'loading2'
-        this.$store.dispatch('loginFacebook')
+      loginWithFacebook() {
+        this.loadingFacebook = true
+        this.$store.dispatch('loginFacebook').then((res) => {
+          this.loadingFacebook = false
+        })
+      },
+      loginWithGoogle() {
+        this.loadingGoogle = true
+        setTimeout(() => {
+          this.loadingGoogle = false
+        }, 1000)
       }
     }
   }
