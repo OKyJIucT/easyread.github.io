@@ -63,18 +63,16 @@ export default {
   ],
   methods: {
     addToArticles() {
-      this.$db.articles.add({
+      this.$store.dispatch('addArticle', {
         id: this.id,
+        userId: this.$store.getters.user.uid,
         img: this.article.img || this.randomImage,
         link: this.article.link,
         text: this.article.text,
         title: this.article.title || this.title || 'Без заголовка',
         wordsCount: this.article.wordsCount,
         uniqWordsCount: this.article.uniqWordsCount
-      }).then((res) => {
-        this.$store.commit('ADD_TO_ARTICLES', this.id)
-        this.$emit('added')
-      }).catch(console.log)
+      })
     },
     removeFromArticles() {
       this.$db.articles
@@ -87,7 +85,6 @@ export default {
         }).catch(console.log)
     },
     goStudy() {
-      console.log('go study')
       this.$router.push({path: `study/${this.article.id}`})
     },
     read() {

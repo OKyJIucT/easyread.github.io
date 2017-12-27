@@ -5,7 +5,8 @@ import {
   LOGIN,
   LOGOUT,
   UPDATE_ARTICLES,
-  UPDATE_LEARNED_WORDS
+  UPDATE_LEARNED_WORDS,
+  ADD_TO_ARTICLES
 } from './mutations'
 const db = idb.db
 
@@ -58,6 +59,13 @@ export default {
       .signOut()
       .then(() => { commit(LOGOUT) })
       .catch(console.log)
+  },
+  addArticle({ commit }, creds) {
+    return Promise.resolve().then(() => {
+      firebase.database().ref('articles/' + creds.id).set(creds)
+      commit(ADD_TO_ARTICLES, creds.id)
+      return true
+    })
   },
   updateArticles({ commit }) {
     db.articles.toArray().then((articles) => {

@@ -32,6 +32,11 @@ export default new Vuex.Store({
         state.articles.push(payload)
       }
     },
+    // [ADD_TO_ARTICLES] (state, payload) {
+    //   if (!state.articles.includes(payload)) {
+    //     state.articles.push(payload)
+    //   }
+    // },
     [UPDATE_ARTICLES] (state, payload) {
       state.articles = payload
     },
