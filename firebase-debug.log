@@ -1,0 +1,18 @@
+[debug] [2017-12-27T09:04:59.710Z] ----------------------------------------------------------------------
+[debug] [2017-12-27T09:04:59.713Z] Command:       /home/dev/.nvm/versions/node/v6.9.5/bin/node /home/dev/.nvm/versions/node/v6.9.5/bin/firebase deploy
+[debug] [2017-12-27T09:04:59.713Z] CLI Version:   3.16.0
+[debug] [2017-12-27T09:04:59.713Z] Platform:      linux
+[debug] [2017-12-27T09:04:59.713Z] Node Version:  v6.9.5
+[debug] [2017-12-27T09:04:59.713Z] Time:          Wed Dec 27 2017 12:04:59 GMT+0300 (MSK)
+[debug] [2017-12-27T09:04:59.713Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-12-27T09:04:59.723Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-12-27T09:04:59.723Z] > authorizing via signed-in user
+[debug] [2017-12-27T09:04:59.725Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/e-lingo  
+  
+ Wed Dec 27 2017 12:04:59 GMT+0300 (MSK)
+[debug] [2017-12-27T09:05:00.809Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-27T09:05:00.810Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/e-lingo/tokens  
+  
+ Wed Dec 27 2017 12:05:00 GMT+0300 (MSK)
+[debug] [2017-12-27T09:05:01.597Z] <<< HTTP RESPONSE 200

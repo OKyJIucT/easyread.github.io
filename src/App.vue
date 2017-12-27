@@ -9,7 +9,7 @@
               v-avatar.indigo(style="margin-bottom: 10px")
                 v-icon(dark) account_circle
                 
-              div.title.grey--text.text--lighten-4 {{ user.email }}
+              div.title.grey--text.text--lighten-4 {{ user ? user.email : 'Гость' }}
               div.subheading.grey--text.text--lighten-4 Супер-юзер
 
       v-list
