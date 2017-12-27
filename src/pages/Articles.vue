@@ -27,15 +27,15 @@
       }
     },
     mounted() {
+      this.$store.dispatch('getUserArticles').then((articles) => {
+        this.articles = articles
+        console.log(articles)
+      }).catch(console.log)
       this.$store.subscribe((mutation, state) => {
         if (mutation.type === 'UPDATE_ARTICLES') {
           this.articles = state.articles
         }
       })
-      this.$db.articles.toArray().then((articles) => {
-        this.articles = articles
-        console.log(articles)
-      }).catch(console.log)
     }
   }
 </script>

@@ -28,10 +28,10 @@
     },
     mounted: function () {
       this.update()
-       this.$db.articles.get({id: this.$route.params.id}, (res) => {
-         this.article = res
-         console.log(res)
-       })
+      this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
+        this.article = article
+        console.log(article)
+      }).catch(console.log)
     },
     methods: {
       update () {

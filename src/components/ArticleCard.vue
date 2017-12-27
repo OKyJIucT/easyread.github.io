@@ -65,14 +65,13 @@ export default {
     addToArticles() {
       this.$store.dispatch('addArticle', {
         id: this.id,
-        userId: this.$store.getters.user.uid,
         img: this.article.img || this.randomImage,
         link: this.article.link,
         text: this.article.text,
         title: this.article.title || this.title || 'Без заголовка',
         wordsCount: this.article.wordsCount,
         uniqWordsCount: this.article.uniqWordsCount
-      })
+      }).then(() => { this.$emit('added') })
     },
     removeFromArticles() {
       this.$db.articles

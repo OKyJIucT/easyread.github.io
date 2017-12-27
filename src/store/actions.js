@@ -1,6 +1,7 @@
 import { idb } from './../idb'
 import firebase from 'firebase'
 import router from './../router'
+import store from './index'
 import {
   LOGIN,
   LOGOUT,
@@ -60,11 +61,33 @@ export default {
       .then(() => { commit(LOGOUT) })
       .catch(console.log)
   },
-  addArticle({ commit }, creds) {
+  addArticle({ commit }, article) {
     return Promise.resolve().then(() => {
-      firebase.database().ref('articles/' + creds.id).set(creds)
-      commit(ADD_TO_ARTICLES, creds.id)
+      firebase
+        .database()
+        .ref(`articles/${store.getters.user.uid}/${article.id}`)
+        .set(article)
+      commit(ADD_TO_ARTICLES, article.id)
       return true
+    })
+  },
+  getUserArticles({ commit }) {
+    return Promise.resolve().then(() => {
+      return firebase
+        .database()
+        .ref(`articles/${store.getters.user.uid}`)
+        .once('value')
+        .then(res => res.val())
+    })
+  },
+  getUserArticle({ commit }, id) {
+    return Promise.resolve().then(() => {
+      return firebase
+        .database()
+        .ref(`articles/${store.getters.user.uid}`)
+        .child(id)
+        .once('value')
+        .then(res => res.val())
     })
   },
   updateArticles({ commit }) {
