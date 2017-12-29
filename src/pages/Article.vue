@@ -12,7 +12,8 @@
       h3.display-2.white--text(style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative") {{ article.title }}
     v-container
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
-        v-card-text {{ article.text }}
+        v-card-text 
+          pre {{ article.text }}
 
 </template>
 
@@ -27,7 +28,6 @@
       }
     },
     mounted: function () {
-      this.update()
       this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
         this.article = article
         console.log(article)
@@ -35,16 +35,6 @@
     },
     methods: {
       update () {
-        this.$db.words.toArray()
-        .then((words) => {
-          this.words = words
-        }).then((words) => {
-          this.activeWord = this.words[0]
-        }).catch(console.log)
-
-        this.$db.learnedWords.toArray()
-          .then(console.log)
-          .catch(console.log)
       }
     }
   }

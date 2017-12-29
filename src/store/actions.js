@@ -1,15 +1,12 @@
-import { idb } from './../idb'
 import firebase from 'firebase'
 import router from './../router'
 import store from './index'
 import {
   LOGIN,
   LOGOUT,
-  UPDATE_ARTICLES,
-  UPDATE_LEARNED_WORDS,
-  ADD_TO_ARTICLES
+  ADD_TO_ARTICLES,
+  REMOVE_ARTICLE
 } from './mutations'
-const db = idb.db
 
 export default {
   registration({ commit }, creds) {
@@ -71,6 +68,16 @@ export default {
       return true
     })
   },
+  removeArticle({ commit }, id) {
+    return Promise.resolve().then(() => {
+      firebase
+        .database()
+        .ref(`articles/${store.getters.user.uid}/${id.id}`)
+        .remove()
+      commit(REMOVE_ARTICLE, id)
+      return true
+    })
+  },
   getUserArticles({ commit }) {
     return Promise.resolve().then(() => {
       return firebase
@@ -90,14 +97,14 @@ export default {
         .then(res => res.val())
     })
   },
-  updateArticles({ commit }) {
-    db.articles.toArray().then((articles) => {
-      commit(UPDATE_ARTICLES, articles)
-    }).catch(console.log)
-  },
-  updateLearnedWords({ commit }) {
-    db.learnedWords.toArray().then((words) => {
-      commit(UPDATE_LEARNED_WORDS, words)
-    }).catch(console.log)
+  addWordToStudied({ commit }, word) {
+    return Promise.resolve().then(() => {
+      firebase
+        .database()
+        .ref(`words/${store.getters.user.uid}`)
+        .child(word.value)
+        .set(word)
+      return word
+    })
   }
 }

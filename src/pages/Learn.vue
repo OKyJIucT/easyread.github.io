@@ -20,18 +20,17 @@
           v-card
             v-card-title(primary-title)
               div
-                h3.headline.mb-0(v-if="activeWord") {{ activeWord.word }}
-                v-btn(flat color="primary" @click="speak(activeWord.word)") Слушать
+                h3.headline.mb-0(v-if="activeWord") {{ activeWord.value }}
+                v-btn(flat color="primary" @click="speak(activeWord.value)") Слушать
                   v-icon(light color='blue') volume_up
             v-card-actions
-              v-btn(flat, color='orange' @click="addToStudy()") На изучение
-              v-btn(flat, color='orange' @click="addToStudied()") Уже знаю
+              v-btn(flat, color='orange' @click="addToStudy(activeWord)") На изучение
+              v-btn(flat, color='orange' @click="addToStudied(activeWord)") Уже знаю
 </template>
 
 <script>
   import _ from 'lodash'
   import { uuid } from 'vue-idb'
-  // import axios from 'axios'
 
   export default {
     data () {
@@ -40,7 +39,7 @@
         toLearnWords: [],
         uniqTextArray: [],
         article: null,
-        activeWord: null,
+        activeWordCount: 0,
         swipeDirection: 'None',
         detectSwipe: {
           left: () => this.swipe('Left'),
@@ -51,28 +50,30 @@
       }
     },
     mounted: function () {
-      this.update()
-        this.$db.articles.get({id: this.$route.params.id}, (res) => {
-          this.article = res
-          this.parse()
-          console.log(res)
-       })
+      this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
+        this.article = article
+        console.log(article)
+        this.parse()
+      }).catch(console.log)
+    },
+    computed: {
+      activeWord() {
+        return this.uniqTextArray[this.activeWordCount]
+      }
     },
     methods: {
       parse() {
-        const textArray = this.article.text.split(' ')
+        const textArray = this.article.text
+          .replace(/(?:\r\n|\r|\n)|—|-|:|,/g, '')
+          .replace(/\./g, ' ')
+          .replace(/\s\s+/g, ' ')
+          .replace(/((\s*\S+)*)\s*/, '$1')
+          .split(' ')
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
-          .sort().map(item => ({id: uuid(), word: item}))
-        this.activeWord = this.uniqTextArray[0]
-        // axios.get(`https://api.qwant.com/api/search/images?count=10&offset=1&q=${this.activeWord.word}`).then((res) => {
-        //   console.log(res)
-        // })
+          .sort().map(item => ({id: uuid(), value: item}))
+
         console.log('Новые слова в статье', this.uniqTextArray)
-      },
-      update() {
-        this.$db.words.toArray().then((words) => { this.words = words })
-        this.$db.learnedWords.toArray().then(console.log).catch(console.log)
       },
       swipe(direction) {
         this.swipeDirection = direction
@@ -80,19 +81,13 @@
       speak(word) {
         window.responsiveVoice.speak(word)
       },
-      addToStudied() {
-        this.$db.learnedWords.add({
-          id: this.activeWord.id,
-          word: this.activeWord.word,
-          translate: ''
-        }).then((id) => {
-          this.$db.words
-            .where('id')
-            .equals(id)
-            .delete()
-            .then(this.update)
-            .catch(console.log)
-        }).catch(console.log)
+      addToStudied(word) {
+        this.$store.dispatch('addWordToStudied', {
+          id: word.id,
+          value: word.value.charAt(0).toUpperCase() + word.value.slice(1)
+        }).then((res) => {
+          this.activeWordCount++
+        })
       },
       addToStudy (word) {
         this.toLearnWords.push(word)

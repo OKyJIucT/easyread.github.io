@@ -7,7 +7,8 @@ import {
   LOGOUT,
   UPDATE_ARTICLES,
   UPDATE_LEARNED_WORDS,
-  ADD_TO_ARTICLES
+  ADD_TO_ARTICLES,
+  REMOVE_ARTICLE
 } from './mutations'
 Vue.use(Vuex)
 
@@ -32,11 +33,9 @@ export default new Vuex.Store({
         state.articles.push(payload)
       }
     },
-    // [ADD_TO_ARTICLES] (state, payload) {
-    //   if (!state.articles.includes(payload)) {
-    //     state.articles.push(payload)
-    //   }
-    // },
+    [REMOVE_ARTICLE] (state, payload) {
+      state.articles.splice(state.articles.indexOf(payload), 1)
+    },
     [UPDATE_ARTICLES] (state, payload) {
       state.articles = payload
     },

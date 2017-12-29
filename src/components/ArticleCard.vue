@@ -18,7 +18,7 @@
           v-model="title")
         h3(class="headline mb-0" v-if="article.title") {{ article.title }}
 
-        div.mb-3 {{ shortDescription }}
+        pre.mb-3 {{ shortDescription }}
         v-chip(color="green" text-color="white")
           v-avatar(class="green darken-4") {{ article.wordsCount || 0 }}
           | Всего слов
@@ -74,14 +74,9 @@ export default {
       }).then(() => { this.$emit('added') })
     },
     removeFromArticles() {
-      this.$db.articles
-        .where('id')
-        .equals(this.article.id)
-        .delete()
-        .then((deleteCount) => {
-          this.$store.dispatch('updateArticles')
-          this.$emit('remove')
-        }).catch(console.log)
+      this.$store
+        .dispatch('removeArticle', { id: this.article.id })
+        .then(() => { this.$emit('remove') })
     },
     goStudy() {
       this.$router.push({path: `study/${this.article.id}`})
