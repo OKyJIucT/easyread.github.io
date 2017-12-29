@@ -4,7 +4,7 @@
       v-layout(row wrap)
         v-flex(xs12 sm12 md8 offset-md2)
           v-radio-group(v-model="type" row)
-            v-radio(label="Link" value="link")
+            // v-radio(label="Link" value="link")
             v-radio(label="Text" value="text")
         v-flex(xs12 sm12 md8 offset-md2)
           div(v-if="type === 'link'")
@@ -28,7 +28,7 @@
             color="purple")
         v-flex(xs12 sm12 md8 offset-md2 v-if="isShowArticleCard")
           article-card(
-            @added="clear()"
+            @added="clearAndGoToArticles()"
             :isNew="true"
             :article="article")
 </template>
@@ -36,14 +36,13 @@
 <script>
   import _ from 'lodash'
   import { uuid } from 'vue-idb'
-  import axios from 'axios'
+  import router from './../router'
   import ArticleCard from '@/components/ArticleCard'
-  const API_URL = 'http://localhost:1488'
 
   export default {
     data () {
       return {
-        type: 'link',
+        type: 'text',
         uniqTextArray: [],
         words: [],
         isOgLoading: false,
@@ -67,7 +66,7 @@
       ArticleCard
     },
     methods: {
-      clear() {
+      clearAndGoToArticles() {
         this.article = {
           img: null,
           link: null,
@@ -80,34 +79,18 @@
         this.isWordsLoading = false
         this.isShowArticleCard = false
         this.isLoadingArticleCard = false
-      },
-      parse () {
-        this.isWordsLoading = true
-        axios.get(`${API_URL}/scraping/${encodeURIComponent(this.article.link)}`)
-          .then((res) => {
-            console.log(res.data)
-            this.uniqTextArray = res.data.uniq_text_array
-            this.uniqWordsCount = res.data.uniq_words_count
-            this.isWordsLoading = false
-          }).catch((err) => {
-            console.log(err)
-          })
-      },
-      getOpenGraph () {
-        this.isOgLoading = true
-        axios.get(`${API_URL}/opengraph/${encodeURIComponent(this.article.link)}`)
-          .then((res) => {
-            console.log(res)
-            this.og = res.data.data
-            this.isOgLoading = false
-          }).catch((err) => {
-            console.log(err)
-          })
+        router.push('./articles')
       },
       analyze () {
         this.isLoadingArticleCard = true
+        const textArray = this.article.text
+          .replace(/(?:\r\n|\r|\n)|—|-|:|,/g, '')
+          .replace(/\./g, ' ')
+          .replace(/\s\s+/g, ' ')
+          .replace(/((\s*\S+)*)\s*/, '$1')
+          .split(' ')
+        this.article.wordsCount = textArray.length
 
-        const textArray = this.article.text.split(' ')
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
           .sort().map(item => ({id: uuid(), word: item}))

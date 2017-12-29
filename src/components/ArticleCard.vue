@@ -18,7 +18,7 @@
           v-model="title")
         h3(class="headline mb-0" v-if="article.title") {{ article.title }}
 
-        div.mb-3 {{ shortDescription }}
+        pre.mb-3 {{ shortDescription }}
         v-chip(color="green" text-color="white")
           v-avatar(class="green darken-4") {{ article.wordsCount || 0 }}
           | Всего слов

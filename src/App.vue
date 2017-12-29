@@ -105,6 +105,9 @@
 
 <style lang="stylus">
 
+pre 
+  white-space pre-wrap
+  font-family inherit
 a 
   text-decoration none
 

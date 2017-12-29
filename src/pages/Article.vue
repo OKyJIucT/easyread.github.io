@@ -12,7 +12,8 @@
       h3.display-2.white--text(style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative") {{ article.title }}
     v-container
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
-        v-card-text {{ article.text }}
+        v-card-text 
+          pre {{ article.text }}
 
 </template>
 

@@ -1,7 +1,12 @@
 <template lang="pug">
   v-content.bg
     v-container(fill-height)
-      v-flex(xs12 sm8 md6 lg5 offset-lg3 offset-md3 offset-sm2)
+      v-flex(
+        xs12 
+        sm8 offset-sm2
+        md6 offset-md3
+        lg5 offset-lg3
+        xl4 offset-xl4)
         v-toolbar(dark color="primary")
           v-toolbar-title.white--text Вход
               
