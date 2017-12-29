@@ -20,12 +20,12 @@
           v-card
             v-card-title(primary-title)
               div
-                h3.headline.mb-0(v-if="activeWord") {{ activeWord.word }}
-                v-btn(flat color="primary" @click="speak(activeWord.word)") Слушать
+                h3.headline.mb-0(v-if="activeWord") {{ activeWord.value }}
+                v-btn(flat color="primary" @click="speak(activeWord.value)") Слушать
                   v-icon(light color='blue') volume_up
             v-card-actions
-              v-btn(flat, color='orange' @click="addToStudy()") На изучение
-              v-btn(flat, color='orange' @click="addToStudied()") Уже знаю
+              v-btn(flat, color='orange' @click="addToStudy(activeWord)") На изучение
+              v-btn(flat, color='orange' @click="addToStudied(activeWord)") Уже знаю
 </template>
 
 <script>
@@ -51,19 +51,23 @@
       }
     },
     mounted: function () {
-      this.update()
-        this.$db.articles.get({id: this.$route.params.id}, (res) => {
-          this.article = res
-          this.parse()
-          console.log(res)
-       })
+      this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
+        this.article = article
+        console.log(article)
+        this.parse()
+      }).catch(console.log)
     },
     methods: {
       parse() {
-        const textArray = this.article.text.split(' ')
+        const textArray = this.article.text
+          .replace(/(?:\r\n|\r|\n)|—|-|:|,/g, '')
+          .replace(/\./g, ' ')
+          .replace(/\s\s+/g, ' ')
+          .replace(/((\s*\S+)*)\s*/, '$1')
+          .split(' ')
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
-          .sort().map(item => ({id: uuid(), word: item}))
+          .sort().map(item => ({id: uuid(), value: item}))
         this.activeWord = this.uniqTextArray[0]
         // axios.get(`https://api.qwant.com/api/search/images?count=10&offset=1&q=${this.activeWord.word}`).then((res) => {
         //   console.log(res)
@@ -80,19 +84,14 @@
       speak(word) {
         window.responsiveVoice.speak(word)
       },
-      addToStudied() {
-        this.$db.learnedWords.add({
-          id: this.activeWord.id,
-          word: this.activeWord.word,
-          translate: ''
-        }).then((id) => {
-          this.$db.words
-            .where('id')
-            .equals(id)
-            .delete()
-            .then(this.update)
-            .catch(console.log)
-        }).catch(console.log)
+      addToStudied(word) {
+        this.$store.dispatch('addWordToStudied', {
+          id: word.id,
+          value: word.value
+        }).then((res) => {
+          console.log('res', res)
+          this.$emit('added')
+        })
       },
       addToStudy (word) {
         this.toLearnWords.push(word)

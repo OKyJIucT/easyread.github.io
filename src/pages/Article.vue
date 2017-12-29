@@ -28,7 +28,6 @@
       }
     },
     mounted: function () {
-      this.update()
       this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
         this.article = article
         console.log(article)
@@ -36,16 +35,6 @@
     },
     methods: {
       update () {
-        this.$db.words.toArray()
-        .then((words) => {
-          this.words = words
-        }).then((words) => {
-          this.activeWord = this.words[0]
-        }).catch(console.log)
-
-        this.$db.learnedWords.toArray()
-          .then(console.log)
-          .catch(console.log)
       }
     }
   }

@@ -93,7 +93,7 @@
 
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
-          .sort().map(item => ({id: uuid(), word: item}))
+          .sort().map(item => ({id: uuid(), value: item}))
 
         this.article.uniqWordsCount = this.uniqTextArray.length
         this.isLoadingArticleCard = false
