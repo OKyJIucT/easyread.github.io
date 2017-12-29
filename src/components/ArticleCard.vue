@@ -74,14 +74,9 @@ export default {
       }).then(() => { this.$emit('added') })
     },
     removeFromArticles() {
-      this.$db.articles
-        .where('id')
-        .equals(this.article.id)
-        .delete()
-        .then((deleteCount) => {
-          this.$store.dispatch('updateArticles')
-          this.$emit('remove')
-        }).catch(console.log)
+      this.$store
+        .dispatch('removeArticle', { id: this.article.id })
+        .then(() => { this.$emit('remove') })
     },
     goStudy() {
       this.$router.push({path: `study/${this.article.id}`})

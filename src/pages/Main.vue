@@ -98,17 +98,6 @@
         this.article.uniqWordsCount = this.uniqTextArray.length
         this.isLoadingArticleCard = false
         this.isShowArticleCard = true
-      },
-      add (word, index) {
-        console.log(word)
-        this.uniqTextArray.splice(index, 1)
-        this.$db.words.add({
-          id: word.id,
-          word: word.word,
-          translate: ''
-        }).then(() => {
-          this.update()
-        })
       }
     }
   }

@@ -11,7 +11,7 @@
             color="purple")
           
         v-flex(xs12 sm12 md8 offset-md2 v-for="(article, i) in articles", :key="i")
-          article-card(:article="article")
+          article-card(:article="article" @remove="updateArticles()")
 </template>
 
 <script>
@@ -28,16 +28,15 @@
       }
     },
     mounted() {
-      this.$store.dispatch('getUserArticles').then((articles) => {
+      this.updateArticles()
+    },
+    methods: {
+      updateArticles() {
+        this.$store.dispatch('getUserArticles').then((articles) => {
         this.articles = articles
-        console.log(articles)
         this.isLoading = false
       }).catch(console.log)
-      this.$store.subscribe((mutation, state) => {
-        if (mutation.type === 'UPDATE_ARTICLES') {
-          this.articles = state.articles
-        }
-      })
+      }
     }
   }
 </script>

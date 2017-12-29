@@ -7,7 +7,8 @@ import {
   LOGOUT,
   UPDATE_ARTICLES,
   UPDATE_LEARNED_WORDS,
-  ADD_TO_ARTICLES
+  ADD_TO_ARTICLES,
+  REMOVE_ARTICLE
 } from './mutations'
 const db = idb.db
 
@@ -68,6 +69,16 @@ export default {
         .ref(`articles/${store.getters.user.uid}/${article.id}`)
         .set(article)
       commit(ADD_TO_ARTICLES, article.id)
+      return true
+    })
+  },
+  removeArticle({ commit }, id) {
+    return Promise.resolve().then(() => {
+      firebase
+        .database()
+        .ref(`articles/${store.getters.user.uid}/${id.id}`)
+        .remove()
+      commit(REMOVE_ARTICLE, id)
       return true
     })
   },
