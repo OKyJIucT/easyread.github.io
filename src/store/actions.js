@@ -99,12 +99,12 @@ export default {
   },
   addWordToStudied({ commit }, word) {
     return Promise.resolve().then(() => {
-      return firebase
+      firebase
         .database()
         .ref(`words/${store.getters.user.uid}`)
-        .child(word.id)
+        .child(word.value)
         .set(word)
-        .then(res => console.log(res))
+      return word
     })
   }
 }

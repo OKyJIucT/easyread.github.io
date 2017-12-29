@@ -31,7 +31,6 @@
 <script>
   import _ from 'lodash'
   import { uuid } from 'vue-idb'
-  // import axios from 'axios'
 
   export default {
     data () {
@@ -40,7 +39,7 @@
         toLearnWords: [],
         uniqTextArray: [],
         article: null,
-        activeWord: null,
+        activeWordCount: 0,
         swipeDirection: 'None',
         detectSwipe: {
           left: () => this.swipe('Left'),
@@ -57,6 +56,11 @@
         this.parse()
       }).catch(console.log)
     },
+    computed: {
+      activeWord() {
+        return this.uniqTextArray[this.activeWordCount]
+      }
+    },
     methods: {
       parse() {
         const textArray = this.article.text
@@ -68,15 +72,8 @@
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
           .sort().map(item => ({id: uuid(), value: item}))
-        this.activeWord = this.uniqTextArray[0]
-        // axios.get(`https://api.qwant.com/api/search/images?count=10&offset=1&q=${this.activeWord.word}`).then((res) => {
-        //   console.log(res)
-        // })
+
         console.log('Новые слова в статье', this.uniqTextArray)
-      },
-      update() {
-        this.$db.words.toArray().then((words) => { this.words = words })
-        this.$db.learnedWords.toArray().then(console.log).catch(console.log)
       },
       swipe(direction) {
         this.swipeDirection = direction
@@ -87,10 +84,9 @@
       addToStudied(word) {
         this.$store.dispatch('addWordToStudied', {
           id: word.id,
-          value: word.value
+          value: word.value.charAt(0).toUpperCase() + word.value.slice(1)
         }).then((res) => {
-          console.log('res', res)
-          this.$emit('added')
+          this.activeWordCount++
         })
       },
       addToStudy (word) {

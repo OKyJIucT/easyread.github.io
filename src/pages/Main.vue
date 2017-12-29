@@ -60,7 +60,6 @@
       }
     },
     mounted() {
-      this.$store.dispatch('updateLearnedWords')
     },
     components: {
       ArticleCard
