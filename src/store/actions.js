@@ -51,6 +51,17 @@ export default {
         }).catch(console.log)
     })
   },
+  loginGoogle({ commit }) {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then((res) => {
+        console.log('res dith google auth', res)
+        commit(LOGIN, res.user)
+        return res.user
+      }).catch(console.log)
+  },
   logout({ commit }) {
     firebase
       .auth()
@@ -98,13 +109,14 @@ export default {
     })
   },
   addWordToStudied({ commit }, word) {
-    return Promise.resolve().then(() => {
-      firebase
-        .database()
-        .ref(`words/${store.getters.user.uid}`)
-        .child(word.value)
-        .set(word)
-      return word
-    })
+    firebase
+      .database()
+      .ref(`words`)
+      .push()
+      .set({
+        uids: store.getters.user.uid,
+        value: word.value
+      })
+      .then(word => word)
   }
 }

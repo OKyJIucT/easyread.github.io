@@ -111,9 +111,9 @@
       },
       loginWithGoogle() {
         this.loadingGoogle = true
-        setTimeout(() => {
+         this.$store.dispatch('loginGoogle').then((res) => {
           this.loadingGoogle = false
-        }, 1000)
+        })
       }
     }
   }

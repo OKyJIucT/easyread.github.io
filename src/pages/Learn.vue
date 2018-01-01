@@ -30,7 +30,6 @@
 
 <script>
   import _ from 'lodash'
-  import { uuid } from 'vue-idb'
 
   export default {
     data () {
@@ -71,7 +70,7 @@
           .split(' ')
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
-          .sort().map(item => ({id: uuid(), value: item}))
+          .sort().map(item => ({ value: item }))
 
         console.log('Новые слова в статье', this.uniqTextArray)
       },
@@ -83,7 +82,6 @@
       },
       addToStudied(word) {
         this.$store.dispatch('addWordToStudied', {
-          id: word.id,
           value: word.value.charAt(0).toUpperCase() + word.value.slice(1)
         }).then((res) => {
           this.activeWordCount++

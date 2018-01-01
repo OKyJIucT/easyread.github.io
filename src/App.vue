@@ -7,9 +7,10 @@
           v-layout(fill-height align-end)
             v-flex(xs12 flexbox)
               v-avatar.indigo(style="margin-bottom: 10px")
-                v-icon(dark) account_circle
+                v-icon(dark v-if="!user.photoURL") account_circle
+                img(v-if="user.photoURL" :src="user.photoURL" :alt="user.displayName")
                 
-              div.title.grey--text.text--lighten-4 {{ user ? user.email : 'Гость' }}
+              div.title.grey--text.text--lighten-4 {{ user ? user.displayName : 'Гость' }}
               div.subheading.grey--text.text--lighten-4 Супер-юзер
 
       v-list
