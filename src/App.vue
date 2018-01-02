@@ -106,6 +106,17 @@
 
 <style lang="stylus">
 
+.tooltip--custom
+  background-color green !important
+  // transform translateY(-100%)
+  bottom 100%
+
+.tooltip 
+  font-family 'Roboto'
+  &.popover 
+    .popover-inner 
+      background #f9f9f9
+
 pre 
   white-space pre-wrap
   font-family inherit
