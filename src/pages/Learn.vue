@@ -49,11 +49,14 @@
       }
     },
     mounted: function () {
-      this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
-        this.article = article
-        console.log(article)
-        this.parse()
-      }).catch(console.log)
+      this.$store.dispatch('getWords').then(res => {
+        this.words = res
+        console.log(res)
+        this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
+          this.article = article
+          this.parse()
+        }).catch(console.log)
+      })
     },
     computed: {
       activeWord() {

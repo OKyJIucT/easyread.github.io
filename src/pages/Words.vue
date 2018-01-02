@@ -20,6 +20,7 @@
 
 <script>
   import axios from 'axios'
+  import store from './../store'
   const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
   const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
@@ -30,9 +31,9 @@
       }
     },
     mounted: function () {
-      this.$db.words.toArray().then((words) => {
-        console.log(words)
-        this.words = words
+      store.dispatch('getWords').then(res => {
+        console.log(res)
+        this.words = res
       })
     },
     methods: {

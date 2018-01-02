@@ -134,10 +134,12 @@ export default {
     firebase
       .database()
       .ref(`users/${store.getters.user.uid}/words`)
-      .update({
-        [word.value]: true
+      .update({ [word.value]: true })
+      .then(() => {
+        console.log(word)
+        store.dispatch('addWord', word)
+        return word
       })
-      .then(word => word)
   },
   addWord({ commit }, word) {
     firebase
@@ -148,5 +150,14 @@ export default {
         translate: ''
       })
       .then(word => word)
+  },
+  getWords({ commit }) {
+    return Promise.resolve().then(() => {
+      return firebase
+        .database()
+        .ref(`words`)
+        .once('value')
+        .then(res => Object.values(res.val()))
+    })
   }
 }
