@@ -46,6 +46,10 @@ export default {
         .auth()
         .signInWithPopup(provider)
         .then((res) => {
+          if (!res.additionalUserInfo.isNewUser) {
+            store.dispatch('writeUser', res.user)
+          }
+          console.log('res dith facebokk auth', res)
           commit(LOGIN, res.user)
           return res.user
         }).catch(console.log)
@@ -57,7 +61,9 @@ export default {
       .auth()
       .signInWithPopup(provider)
       .then((res) => {
-        console.log('res dith google auth', res)
+        if (!res.additionalUserInfo.isNewUser) {
+          commit('writeUser', res.user)
+        }
         commit(LOGIN, res.user)
         return res.user
       }).catch(console.log)
@@ -68,6 +74,22 @@ export default {
       .signOut()
       .then(() => { commit(LOGOUT) })
       .catch(console.log)
+  },
+  writeUser({ commit }, user) {
+    firebase
+      .database()
+      .ref(`users/${user.uid}`)
+      .set({
+        id: user.uid,
+        display_name: user.displayName,
+        email: user.email,
+        timestamp: Date.now(),
+        level: 1,
+        articles: null,
+        words: null,
+        phrasal_verbs: null
+      })
+      .then(word => word)
   },
   addArticle({ commit }, article) {
     return Promise.resolve().then(() => {
@@ -111,11 +133,19 @@ export default {
   addWordToStudied({ commit }, word) {
     firebase
       .database()
-      .ref(`words`)
-      .push()
+      .ref(`users/${store.getters.user.uid}/words`)
+      .update({
+        [word.value]: true
+      })
+      .then(word => word)
+  },
+  addWord({ commit }, word) {
+    firebase
+      .database()
+      .ref(`words/${word.value}`)
       .set({
-        uids: store.getters.user.uid,
-        value: word.value
+        word: word.value,
+        translate: ''
       })
       .then(word => word)
   }
