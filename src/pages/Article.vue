@@ -14,13 +14,16 @@
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
         v-card-text 
           pre
-            popper(
-              trigger="click" 
-              @show="translate(word, index)" 
-              :options="{placement: 'top', gpuAcceleration: true}"
-              v-for="(word, index) in words" 
+            v-popover.word(
+              offset="0" 
+              v-for="(word, index) in words"
+              @show="translate(word, index)"
               :key="index")
-              div.popper
+              v-btn.word(
+                :flat="activeIndex !== index" 
+                :color="activeIndex === index ? 'success' : null") {{ word }}&nbsp;
+
+              template(slot="popover")
                 v-card.elevation-5
                   v-card-title(primary-title)
                     div
@@ -34,24 +37,20 @@
                   v-card-actions
                     v-btn(flat, color='orange' @click="") На изучение
                     v-btn(flat, color='orange' @click="") Уже знаю
-              v-btn.word(
-                :flat="activeIndex !== index" 
-                :color="activeIndex === index ? 'success' : null" 
-                slot="reference") {{ word }}&nbsp;
-          
+
 </template>
 
 <script>
   import axios from 'axios'
-  import Popper from 'vue-popperjs'
-  import 'vue-popperjs/dist/css/vue-popper.css'
+  // import Popper from 'vue-popperjs'
+  // import 'vue-popperjs/dist/css/vue-popper.css'
   const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
   const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
   export default {
-    components: {
-      'popper': Popper
-    },
+    // components: {
+    //   'popper': Popper
+    // },
     data () {
       return {
         activeIndex: null,
@@ -81,6 +80,10 @@
       console.log(this.progress)
     },
     methods: {
+      clear() {
+        this.activeIndex = null
+        this.translateWord = null
+      },
       speak (word) {
         window.responsiveVoice.speak(word)
       },

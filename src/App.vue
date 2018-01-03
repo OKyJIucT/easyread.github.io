@@ -104,6 +104,7 @@
 </script>
 
 <style lang="stylus">
+@import './styles/popover.styl'
 .popper[x-placement^="top"]
   .popper__arrow
     bottom -3px

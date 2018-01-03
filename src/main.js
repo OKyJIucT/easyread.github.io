@@ -9,7 +9,9 @@ import App from './App'
 import router from './router'
 import store from './store'
 import firebase from 'firebase'
+import VTooltip from 'v-tooltip'
 
+Vue.use(VTooltip)
 Vue.use(Vuetify)
 Vue.use(Vuex)
 Vue.config.productionTip = false
