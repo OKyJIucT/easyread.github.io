@@ -25,7 +25,6 @@ export default {
         commit(LOGIN, user)
         router.push('/')
       }
-      console.log('ME ==>>', user)
     })
   },
   login({ commit }, creds) {
@@ -50,7 +49,6 @@ export default {
           if (!res.additionalUserInfo.isNewUser) {
             store.dispatch('writeUser', res.user)
           }
-          console.log('res dith facebokk auth', res)
           commit(LOGIN, res.user)
           return res.user
         }).catch(console.log)
@@ -137,7 +135,6 @@ export default {
       .ref(`users/${store.getters.user.uid}/words`)
       .update({ [word.value]: true })
       .then(() => {
-        console.log(word)
         store.dispatch('addWord', word)
         return word
       })

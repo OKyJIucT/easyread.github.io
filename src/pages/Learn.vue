@@ -51,7 +51,6 @@
     mounted: function () {
       this.$store.dispatch('getWords').then(res => {
         this.words = res
-        console.log(res)
         this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
           this.article = article
           this.parse()
@@ -74,8 +73,6 @@
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
           .sort().map(item => ({ value: item }))
-
-        console.log('Новые слова в статье', this.uniqTextArray)
       },
       swipe(direction) {
         this.swipeDirection = direction

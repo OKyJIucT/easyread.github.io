@@ -34,14 +34,11 @@
 </template>
 
 <script>
-import { uuid } from 'vue-idb'
-
 export default {
   name: 'article-card',
   data() {
     return {
       title: null,
-      id: uuid(),
       randomImage: `./../static/${Math.floor(Math.random() * 6) + 1}.png`
     }
   },

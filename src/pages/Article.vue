@@ -6,7 +6,7 @@
         :size="100"
         :width="15"
         :rotate="-90"
-        :value="progress"
+        :value="+progress"
         style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative"
         color="green") {{ progress || 0 }}%
       h3.display-2.white--text(style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative") {{ article.title }}
@@ -17,7 +17,7 @@
             popper(
               trigger="click" 
               @show="translate(word, index)" 
-              :options="{placement: 'top'}" 
+              :options="{placement: 'top', gpuAcceleration: true}"
               v-for="(word, index) in words" 
               :key="index")
               div.popper
@@ -66,16 +66,19 @@
         return this.$store.getters.learnedWords
       },
       progress() {
-        return (this.learnedWords.length * 100 / this.words.length).toFixed()
+        if (this.words.length && this.learnedWords.length) {
+          return (this.learnedWords.length * 100 / this.words.length).toFixed()
+        } else {
+          return 0
+        }
       }
     },
     mounted: function () {
-      console.log(this.learnedWords)
       this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
         this.article = article
         this.splitText()
-        console.log(article)
       }).catch(console.log)
+      console.log(this.progress)
     },
     methods: {
       speak (word) {
@@ -86,19 +89,12 @@
         axios
           .get(`${API_URL}/translate?key=${API_KEY}&text=${word}&lang=en-ru&format=plain&options=1`)
           .then((res) => {
-            console.log(res)
             this.translateWord = res.data.text[0]
           })
-      },
-      test() {
-        console.log('test')
-      },
-      update () {
       },
       splitText() {
         const textArray = this.article.text.split(' ')
         this.words = textArray
-        console.log(textArray)
       }
     }
   }

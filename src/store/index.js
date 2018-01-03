@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { idb } from './../idb'
 import actions from './actions'
 import {
   LOGIN,
@@ -49,7 +48,5 @@ export default new Vuex.Store({
     learnedWords: state => state.learnedWords,
     user: state => state.user
   },
-  actions: actions,
-  modules: idb.modules,
-  plugins: [ idb.plugin ]
+  actions: actions
 })

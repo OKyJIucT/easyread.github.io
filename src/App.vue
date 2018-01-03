@@ -82,13 +82,11 @@
       window.responsiveVoice.setDefaultVoice('US English Female')
     },
     created () {
-      console.log('isLoggedIn ===>>>>', this.isLoggedIn)
       this.$store.dispatch('me')
       this.$store.dispatch('getWords')
     },
     computed: {
       user() {
-        console.log(this.$store.getters.user)
         return this.$store.getters.user
       },
       isLoggedIn() {

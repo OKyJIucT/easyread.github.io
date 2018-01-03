@@ -8,7 +8,6 @@ import 'vuetify/dist/vuetify.css'
 import App from './App'
 import router from './router'
 import store from './store'
-import { idb } from './idb'
 import firebase from 'firebase'
 
 Vue.use(Vuetify)
@@ -30,7 +29,6 @@ firebase.initializeApp(config)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  idb,
   store,
   router,
   template: '<App/>',

@@ -32,7 +32,6 @@
     },
     mounted: function () {
       store.dispatch('getWords').then(res => {
-        console.log(res)
         this.words = res
       })
     },
@@ -44,14 +43,12 @@
         axios
           .get(`${API_URL}/translate?key=${API_KEY}&text=${word}&lang=en-ru&format=plain&options=1`)
           .then((res) => {
-            console.log(res.data)
             this.words = this.words.map((item) => {
               if (word === item.word) {
                 item.translate = res.data.text[0]
               }
               return item
             })
-            console.log(this.words)
           })
       }
     }

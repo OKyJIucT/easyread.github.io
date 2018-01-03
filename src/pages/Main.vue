@@ -35,7 +35,6 @@
 
 <script>
   import _ from 'lodash'
-  import { uuid } from 'vue-idb'
   import router from './../router'
   import ArticleCard from '@/components/ArticleCard'
 
@@ -92,7 +91,7 @@
 
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
         this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
-          .sort().map(item => ({id: uuid(), value: item}))
+          .sort().map(item => ({value: item}))
 
         this.article.uniqWordsCount = this.uniqTextArray.length
         this.isLoadingArticleCard = false
