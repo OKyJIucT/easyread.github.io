@@ -10,11 +10,9 @@ import router from './router'
 import store from './store'
 import { idb } from './idb'
 import firebase from 'firebase'
-import VTooltip from 'v-tooltip'
 
 Vue.use(Vuetify)
 Vue.use(Vuex)
-Vue.use(VTooltip)
 Vue.config.productionTip = false
 
 // Initialize Firebase

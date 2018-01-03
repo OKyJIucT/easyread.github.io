@@ -14,38 +14,37 @@
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
         v-card-text 
           pre
-            v-popover.word(offset='16' :disabled='!isEnabled' @show="translate(word)" v-for="word in words")
-              v-btn.word(flat) {{ word }}&nbsp;
-              template(slot='popover')
+            popper(trigger="click" @show="translate(word)" :options="{placement: 'top'}" v-for="word in words" :key="word")
+              div.popper
                 v-card.elevation-5
                   v-card-title(primary-title)
                     div
                       h3.headline.mb-0 {{ word }}
-                      h3.headline.mb-0 {{ translateWord }}                      
-                      v-btn(flat color="primary" @click="speak(word)") Слушать
-                        v-icon(light color='blue') volume_up
+                        v-btn(flat color="primary" @click="speak(word)") Слушать
+                          v-icon(light color='blue') volume_up
+                      h3.headline.mb-0 {{ translateWord || 'Перевод...' }}
+
                   v-card-actions
                     v-btn(flat, color='orange' @click="") На изучение
                     v-btn(flat, color='orange' @click="") Уже знаю
-                //- v-card-text.elevation-5 sdfs
-                //-   a(v-close-popover='') Close
-
-
-            //- span(v-for="word in words") {{ word }}
-            //- v-tooltip(content-class="tooltip--custom" top max-width="300" v-for="word in words")
-            //-   v-btn.word(flat slot="activator") {{ word }}&nbsp;
-            //-   span dsjfhsdjkfgdsjkjfdsfkasd dsfdsf sdfsdf dsf fsdf fscsdf dsfs dfds fsdf sfs  fdg dgf gdf gd fg dfg d df sdfs fs dfs fdsf sdf dsfsd 
-
+              v-btn.word(flat slot="reference") {{ word }}&nbsp;
+          
 </template>
 
 <script>
   import axios from 'axios'
+  import Popper from 'vue-popperjs'
+  import 'vue-popperjs/dist/css/vue-popper.css'
   const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
   const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
   export default {
+    components: {
+      'popper': Popper
+    },
     data () {
       return {
+        show: false,
         isEnabled: true,
         words: [],
         toLearnWords: [],
@@ -93,5 +92,14 @@
     font-weight 400
     & >>> div 
       padding 0 !important
+
+  .popper
+    border initial
+    background-color initial 
+    color initial 
+    box-shadow initial
+    text-align initial
+    border-radius initial
+  
 
 </style>

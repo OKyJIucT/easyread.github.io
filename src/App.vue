@@ -105,7 +105,9 @@
 </script>
 
 <style lang="stylus">
-
+.popper[x-placement^="top"]
+  .popper__arrow
+    bottom -3px
 .tooltip--custom
   background-color green !important
   // transform translateY(-100%)
