@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app(light)
+  v-app(light style="overflow: hidden")
     v-navigation-drawer(fixed :clipped='clipped' v-model='drawer' app  v-if='isLoggedIn')
       v-card-media(src='/static/1.png', height='200px')
         .black-overlay
