@@ -14,20 +14,30 @@
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
         v-card-text 
           pre
-            popper(trigger="click" @show="translate(word)" :options="{placement: 'top'}" v-for="word in words" :key="word")
+            popper(
+              trigger="click" 
+              @show="translate(word, index)" 
+              :options="{placement: 'top'}" 
+              v-for="(word, index) in words" 
+              :key="index")
               div.popper
                 v-card.elevation-5
                   v-card-title(primary-title)
                     div
+                      p.caption.mb-0 Английский
                       h3.headline.mb-0 {{ word }}
-                        v-btn(flat color="primary" @click="speak(word)") Слушать
+                        v-btn(flat icon color="pink" @click="speak(word)")
                           v-icon(light color='blue') volume_up
+                      p.caption.mb-0 Русский
                       h3.headline.mb-0 {{ translateWord || 'Перевод...' }}
 
                   v-card-actions
                     v-btn(flat, color='orange' @click="") На изучение
                     v-btn(flat, color='orange' @click="") Уже знаю
-              v-btn.word(flat slot="reference") {{ word }}&nbsp;
+              v-btn.word(
+                :flat="activeIndex !== index" 
+                :color="activeIndex === index ? 'success' : null" 
+                slot="reference") {{ word }}&nbsp;
           
 </template>
 
@@ -44,13 +54,12 @@
     },
     data () {
       return {
-        show: false,
-        isEnabled: true,
+        activeIndex: null,
+        activeColor: null,
         words: [],
         toLearnWords: [],
         translateWord: null,
-        article: null,
-        activeWord: null
+        article: null
       }
     },
     mounted: function () {
@@ -61,10 +70,15 @@
       }).catch(console.log)
     },
     methods: {
-      translate(word) {
+      speak (word) {
+        window.responsiveVoice.speak(word)
+      },
+      translate(word, index) {
+        this.activeIndex = index
         axios
           .get(`${API_URL}/translate?key=${API_KEY}&text=${word}&lang=en-ru&format=plain&options=1`)
           .then((res) => {
+            console.log(res)
             this.translateWord = res.data.text[0]
           })
       },
