@@ -5,7 +5,8 @@ import {
   LOGIN,
   LOGOUT,
   ADD_TO_ARTICLES,
-  REMOVE_ARTICLE
+  REMOVE_ARTICLE,
+  UPDATE_LEARNED_WORDS
 } from './mutations'
 
 export default {
@@ -157,7 +158,10 @@ export default {
         .database()
         .ref(`words`)
         .once('value')
-        .then(res => Object.values(res.val()))
+        .then(res => {
+          commit(UPDATE_LEARNED_WORDS, Object.values(res.val()))
+          return Object.values(res.val())
+      })
     })
   }
 }

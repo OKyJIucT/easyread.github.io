@@ -84,6 +84,7 @@
     created () {
       console.log('isLoggedIn ===>>>>', this.isLoggedIn)
       this.$store.dispatch('me')
+      this.$store.dispatch('getWords')
     },
     computed: {
       user() {

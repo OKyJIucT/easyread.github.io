@@ -6,9 +6,9 @@
         :size="100"
         :width="15"
         :rotate="-90"
-        :value="article.progress"
+        :value="progress"
         style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative"
-        color="green") {{ article.progress || 0 }}%
+        color="green") {{ progress || 0 }}%
       h3.display-2.white--text(style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative") {{ article.title }}
     v-container
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
@@ -57,12 +57,20 @@
         activeIndex: null,
         activeColor: null,
         words: [],
-        toLearnWords: [],
         translateWord: null,
         article: null
       }
     },
+    computed: {
+      learnedWords() {
+        return this.$store.getters.learnedWords
+      },
+      progress() {
+        return (this.learnedWords.length * 100 / this.words.length).toFixed()
+      }
+    },
     mounted: function () {
+      console.log(this.learnedWords)
       this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
         this.article = article
         this.splitText()
