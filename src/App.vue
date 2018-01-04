@@ -82,8 +82,13 @@
       window.responsiveVoice.setDefaultVoice('US English Female')
     },
     created () {
-      this.$store.dispatch('me')
-      this.$store.dispatch('getWords')
+      this.$store.dispatch('me').then((res) => {
+        console.log(this.user)
+        setTimeout(() => {
+          this.$store.dispatch('getWords')
+          this.$store.dispatch('getArticles')
+        }, 300)
+      })
     },
     computed: {
       user() {
@@ -96,7 +101,7 @@
     methods: {
       logout () {
         this.$store.dispatch('logout').then((res) => {
-          router.push('./auth')
+          router.push('/auth')
         })
       }
     }

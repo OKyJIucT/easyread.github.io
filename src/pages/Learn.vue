@@ -6,9 +6,9 @@
         :size="100"
         :width="15"
         :rotate="-90"
-        :value="article.progress"
+        :value="+progress"
         style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative"
-        color="green") {{ article.progress || 0 }}%
+        color="green") {{ progress || 0 }}%
       h3.display-2.white--text(style="margin-top: auto; margin-left: 15px; margin-bottom: 15px; position: relative") {{ article.title }}
     v-container(style="height: calc(100vh - 360px - 36px - 64px)")
       v-layout(
@@ -21,8 +21,8 @@
             v-card-title(primary-title)
               div
                 h3.headline.mb-0(v-if="activeWord") {{ activeWord.value }}
-                v-btn(flat color="primary" @click="speak(activeWord.value)") Слушать
-                  v-icon(light color='blue') volume_up
+                  v-btn(flat icon color="primary" @click="speak(activeWord.value)")
+                    v-icon(light color='blue') volume_up
             v-card-actions
               v-btn(flat, color='orange' @click="addToStudy(activeWord)") На изучение
               v-btn(flat, color='orange' @click="addToStudied(activeWord)") Уже знаю
@@ -60,6 +60,9 @@
     computed: {
       activeWord() {
         return this.uniqTextArray[this.activeWordCount]
+      },
+      progress() {
+        return (this.$store.getters.learnedWords.length * 100 / this.article.uniqWordsCount).toFixed()
       }
     },
     methods: {
@@ -81,11 +84,10 @@
         window.responsiveVoice.speak(word)
       },
       addToStudied(word) {
-        this.$store.dispatch('addWordToStudied', {
-          value: word.value.charAt(0).toUpperCase() + word.value.slice(1)
-        }).then((res) => {
-          this.activeWordCount++
-        })
+        this.$store.dispatch('addWordToStudied', word)
+          .then(() => {
+            this.activeWordCount++
+          })
       },
       addToStudy (word) {
         this.toLearnWords.push(word)

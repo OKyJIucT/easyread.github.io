@@ -6,8 +6,13 @@ import {
   LOGOUT,
   ADD_TO_ARTICLES,
   REMOVE_ARTICLE,
-  UPDATE_LEARNED_WORDS
+  ADD_TO_LEARNED_WORDS,
+  UPDATE_LEARNED_WORDS,
+  UPDATE_ARTICLES
 } from './mutations'
+import axios from 'axios'
+const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
+const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
 export default {
   registration({ commit }, creds) {
@@ -15,6 +20,7 @@ export default {
       .auth()
       .createUserWithEmailAndPassword(creds.email, creds.password)
       .then((res) => {
+        store.dispatch('writeUser', res)
         commit(LOGIN, res)
         router.push('/')
       }).catch(console.log)
@@ -34,6 +40,7 @@ export default {
         .signInWithEmailAndPassword(creds.email, creds.password)
         .then((res) => {
           commit(LOGIN, res)
+          store.dispatch('loadData')
           router.push('/')
           return res
         }).catch(console.log)
@@ -46,10 +53,11 @@ export default {
         .auth()
         .signInWithPopup(provider)
         .then((res) => {
-          if (!res.additionalUserInfo.isNewUser) {
+          if (res.additionalUserInfo.isNewUser) {
             store.dispatch('writeUser', res.user)
           }
           commit(LOGIN, res.user)
+          store.dispatch('loadData')
           return res.user
         }).catch(console.log)
     })
@@ -60,10 +68,11 @@ export default {
       .auth()
       .signInWithPopup(provider)
       .then((res) => {
-        if (!res.additionalUserInfo.isNewUser) {
-          commit('writeUser', res.user)
+        if (res.additionalUserInfo.isNewUser) {
+          store.dispatch('writeUser', res.user)
         }
         commit(LOGIN, res.user)
+        store.dispatch('loadData')
         return res.user
       }).catch(console.log)
   },
@@ -91,14 +100,13 @@ export default {
       .then(word => word)
   },
   addArticle({ commit }, article) {
-    return Promise.resolve().then(() => {
-      firebase
-        .database()
-        .ref(`articles/${store.getters.user.uid}/${article.id}`)
-        .set(article)
-      commit(ADD_TO_ARTICLES, article.id)
-      return true
-    })
+    firebase
+      .database()
+      .ref(`articles/${store.getters.user.uid}/${article.id}`)
+      .set(article)
+      .then(() => {
+        commit(ADD_TO_ARTICLES, article)
+      })
   },
   removeArticle({ commit }, id) {
     return Promise.resolve().then(() => {
@@ -110,14 +118,16 @@ export default {
       return true
     })
   },
-  getUserArticles({ commit }) {
-    return Promise.resolve().then(() => {
-      return firebase
-        .database()
-        .ref(`articles/${store.getters.user.uid}`)
-        .once('value')
-        .then(res => res.val())
-    })
+  getArticles({ commit }) {
+    firebase
+      .database()
+      .ref(`articles/${store.getters.user.uid}`)
+      .once('value')
+      .then(res => {
+        const result = res.val() ? Object.values(res.val()) : []
+        commit(UPDATE_ARTICLES, result)
+        return result
+      })
   },
   getUserArticle({ commit }, id) {
     return Promise.resolve().then(() => {
@@ -130,35 +140,45 @@ export default {
     })
   },
   addWordToStudied({ commit }, word) {
-    firebase
-      .database()
-      .ref(`users/${store.getters.user.uid}/words`)
-      .update({ [word.value]: true })
-      .then(() => {
-        store.dispatch('addWord', word)
-        return word
+    axios
+      .get(`${API_URL}/translate?key=${API_KEY}&text=${word.value}&lang=en-ru&format=plain&options=1`)
+      .then((res) => {
+        const data = {
+          word: word.value.charAt(0).toUpperCase() + word.value.slice(1),
+          translate: res.data.text[0]
+        }
+        firebase
+          .database()
+          .ref(`users/${store.getters.user.uid}/words/${word.value}`)
+          .set(data)
+          .then(() => {
+            commit(ADD_TO_LEARNED_WORDS, data)
+            store.dispatch('addWord', data)
+            return word
+          })
       })
   },
-  addWord({ commit }, word) {
+  addWord({ commit }, wordData) {
     firebase
       .database()
-      .ref(`words/${word.value}`)
-      .set({
-        word: word.value,
-        translate: ''
-      })
+      .ref(`words/${wordData.word}`)
+      .set(wordData)
       .then(word => word)
   },
   getWords({ commit }) {
     return Promise.resolve().then(() => {
       return firebase
         .database()
-        .ref(`words`)
+        .ref(`users/${store.getters.user.uid}/words`)
         .once('value')
         .then(res => {
-          commit(UPDATE_LEARNED_WORDS, Object.values(res.val()))
-          return Object.values(res.val())
+          commit(UPDATE_LEARNED_WORDS, res.val() ? Object.values(res.val()) : [])
+          return res.val() ? Object.values(res.val()) : []
       })
     })
+  },
+  loadData() {
+    store.dispatch('getWords')
+    store.dispatch('getArticles')
   }
 }

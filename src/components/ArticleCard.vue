@@ -6,9 +6,9 @@
         :size="100"
         :width="15"
         :rotate="-90"
-        :value="article.progress"
+        :value="+progress"
         style="margin-top: auto; margin-left: 15px; margin-bottom: 15px"
-        color="green") {{ article.progress || 0 }}%
+        color="green") {{ progress || 0 }}%
     v-card-title(primary-title)
       div(style="width: 100%")
         v-text-field(
@@ -43,8 +43,11 @@ export default {
     }
   },
   computed: {
+    id() {
+      return this.$store.getters.articles.length + 1
+    },
     progress() {
-      return this.$store.getters.learnedWords.length * 100 / this.article.uniqWordsCount
+      return (this.$store.getters.learnedWords.length * 100 / this.article.uniqWordsCount).toFixed()
     },
     shortDescription() {
       if (this.article.text) {
