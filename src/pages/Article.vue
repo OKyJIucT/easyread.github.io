@@ -42,15 +42,10 @@
 
 <script>
   import axios from 'axios'
-  // import Popper from 'vue-popperjs'
-  // import 'vue-popperjs/dist/css/vue-popper.css'
   const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
   const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
   export default {
-    // components: {
-    //   'popper': Popper
-    // },
     data () {
       return {
         activeIndex: null,
@@ -77,7 +72,6 @@
         this.article = article
         this.splitText()
       }).catch(console.log)
-      console.log(this.progress)
     },
     methods: {
       clear() {
@@ -88,12 +82,22 @@
         window.responsiveVoice.speak(word)
       },
       translate(word, index) {
+        this.$store.dispatch('getWord', word).then(res => {
+          if (res === null) {
+            axios
+              .get(`${API_URL}/translate?key=${API_KEY}&text=${word}&lang=en-ru&format=plain&options=1`)
+              .then((res) => {
+                this.translateWord = res.data.text[0]
+                this.$store.dispatch('addWord', {
+                  word: word.charAt(0).toUpperCase() + word.slice(1),
+                  translate: res.data.text[0]
+                })
+              })
+          } else {
+            this.translateWord = res.translate
+          }
+        })
         this.activeIndex = index
-        axios
-          .get(`${API_URL}/translate?key=${API_KEY}&text=${word}&lang=en-ru&format=plain&options=1`)
-          .then((res) => {
-            this.translateWord = res.data.text[0]
-          })
       },
       splitText() {
         const textArray = this.article.text.split(' ')

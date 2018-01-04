@@ -166,15 +166,23 @@ export default {
       .then(word => word)
   },
   getWords({ commit }) {
+    firebase
+      .database()
+      .ref(`users/${store.getters.user.uid}/words`)
+      .once('value')
+      .then(res => {
+        commit(UPDATE_LEARNED_WORDS, res.val() ? Object.values(res.val()) : [])
+        return res.val() ? Object.values(res.val()) : []
+    })
+  },
+  getWord({ commit }, word) {
     return Promise.resolve().then(() => {
       return firebase
         .database()
-        .ref(`users/${store.getters.user.uid}/words`)
+        .ref(`words`)
+        .child(word.charAt(0).toUpperCase() + word.slice(1))
         .once('value')
-        .then(res => {
-          commit(UPDATE_LEARNED_WORDS, res.val() ? Object.values(res.val()) : [])
-          return res.val() ? Object.values(res.val()) : []
-      })
+        .then(res => res.val())
     })
   },
   loadData() {
