@@ -13,33 +13,32 @@
     v-container
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
         v-card-text 
-          pre#pre
-            template(v-for="(word, index) in words")
-              br(v-if="!word.indexOf('<br>')")
-              template(v-else-if="!word.indexOf('.')") .
-              div.word(v-else)
-                template(v-if="word.indexOf('.')") &nbsp;
-                v-popover.word(
-                  offset="0" 
-                  @show="translate(word, index)")
-                  v-btn.word(
-                    :flat="activeIndex !== index" 
-                    :color="activeIndex === index ? 'success' : null") {{ word }}
+          template(v-for="(word, index) in words")
+            br(v-if="!word.indexOf('<br>')")
+            template(v-else-if="!word.indexOf('.')") .
+            div.word(v-else)
+              template(v-if="word.indexOf('.')") &nbsp;
+              v-popover.word(
+                offset="0" 
+                @show="translate(word, index)")
+                v-btn.word(
+                  :flat="activeIndex !== index" 
+                  :color="activeIndex === index ? 'success' : null") {{ word }}
 
-                  template(slot="popover")
-                    v-card.elevation-5
-                      v-card-title(primary-title)
-                        div
-                          p.caption.mb-0 Английский
-                          h3.headline.mb-0 {{ word }}
-                            v-btn(flat icon color="pink" @click="speak(word)")
-                              v-icon(light color='blue') volume_up
-                          p.caption.mb-0 Русский
-                          h3.headline.mb-0 {{ translateWord || 'Перевод...' }}
+                template(slot="popover")
+                  v-card.elevation-5
+                    v-card-title(primary-title)
+                      div
+                        p.caption.mb-0 Английский
+                        h3.headline.mb-0 {{ word }}
+                          v-btn(flat icon color="pink" @click="speak(word)")
+                            v-icon(light color='blue') volume_up
+                        p.caption.mb-0 Русский
+                        h3.headline.mb-0 {{ translateWord || 'Перевод...' }}
 
-                      v-card-actions
-                        v-btn(flat, color='orange' @click="") На изучение
-                        v-btn(flat, color='orange' @click="") Уже знаю
+                    v-card-actions
+                      v-btn(flat, color='orange' @click="") На изучение
+                      v-btn(flat, color='orange' @click="") Уже знаю
 
 </template>
 
