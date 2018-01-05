@@ -13,35 +13,37 @@
     v-container
       v-flex(xs12 sm10 md8 lg6 offset-lg3 offset-md2 offset-sm1)
         v-card-text 
-          pre
-            v-popover.word(
-              :offset="0"
-              :delay="0"
-              :disposeTimeout="5000"
-              v-for="(word, index) in words"
-              @show="translate(word, index)"
-              :key="index")
-              v-btn.word(flat :class="{active: activeIndex === index}") {{ word }}&nbsp;
+          pre#pre 
+            | {{ article.text }}
+            //- v-popover.word(
+            //-   offset="0" 
+            //-   v-for="(word, index) in words"
+            //-   @show="translate(word, index)"
+            //-   :key="index")
+            //-   v-btn.word(
+            //-     :flat="activeIndex !== index" 
+            //-     :color="activeIndex === index ? 'success' : null") {{ word }}&nbsp;
 
-              template(slot="popover")
-                v-card.elevation-5
-                  v-card-title(primary-title)
-                    div
-                      p.caption.mb-0 Английский
-                      h3.headline.mb-0 {{ word }}
-                        v-btn(flat icon color="pink" @click="speak(word)")
-                          v-icon(light color='blue') volume_up
-                      p.caption.mb-0 Русский
-                      h3.headline.mb-0 {{ translateWord || 'Перевод...' }}
+            //-   template(slot="popover")
+            //-     v-card.elevation-5
+            //-       v-card-title(primary-title)
+            //-         div
+            //-           p.caption.mb-0 Английский
+            //-           h3.headline.mb-0 {{ word }}
+            //-             v-btn(flat icon color="pink" @click="speak(word)")
+            //-               v-icon(light color='blue') volume_up
+            //-           p.caption.mb-0 Русский
+            //-           h3.headline.mb-0 {{ translateWord || 'Перевод...' }}
 
-                  v-card-actions
-                    v-btn(flat, color='orange' @click="") На изучение
-                    v-btn(flat, color='orange' @click="") Уже знаю
+            //-       v-card-actions
+            //-         v-btn(flat, color='orange' @click="") На изучение
+            //-         v-btn(flat, color='orange' @click="") Уже знаю
 
 </template>
 
 <script>
   import axios from 'axios'
+  import SplitText from './../_common/SplitText'
   const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
   const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
@@ -60,8 +62,8 @@
         return this.$store.getters.learnedWords
       },
       progress() {
-        if (this.words.length && this.learnedWords.length) {
-          return (this.learnedWords.length * 100 / this.words.length).toFixed()
+        if (this.article.uniqWordsCount && this.learnedWords.length) {
+          return (this.learnedWords.length * 100 / this.article.uniqWordsCount).toFixed()
         } else {
           return 0
         }
@@ -71,6 +73,8 @@
       this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
         this.article = article
         this.splitText()
+        const mySplitText = new SplitText(document.querySelector('#pre'), { type: 'words' })
+        console.log('=>>>', mySplitText)
       }).catch(console.log)
     },
     methods: {
@@ -100,7 +104,8 @@
         this.activeIndex = index
       },
       splitText() {
-        const textArray = this.article.text.split(' ')
+        const textArray = this.article.text.split(' ').split('.').split(/\n/g)
+        console.log('textArray', textArray)
         this.words = textArray
       }
     }
