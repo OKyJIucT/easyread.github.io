@@ -34,7 +34,6 @@
   export default {
     data () {
       return {
-        words: [],
         toLearnWords: [],
         uniqTextArray: [],
         article: null,
@@ -49,13 +48,10 @@
       }
     },
     mounted: function () {
-      this.$store.dispatch('getWords').then(res => {
-        this.words = res
-        this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
-          this.article = article
-          this.parse()
-        }).catch(console.log)
-      })
+      this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
+        this.article = article
+        this.parse()
+      }).catch(console.log)
     },
     computed: {
       activeWord() {
@@ -63,6 +59,9 @@
       },
       progress() {
         return (this.$store.getters.learnedWords.length * 100 / this.article.uniqWordsCount).toFixed()
+      },
+      learnedWords() {
+        return this.$store.getters.learnedWords
       }
     },
     methods: {
@@ -74,7 +73,7 @@
           .replace(/((\s*\S+)*)\s*/, '$1')
           .split(' ')
         const sortUniq = _.uniq(textArray).filter(item => item.match(/^[a-zA-Z]+$/))
-        this.uniqTextArray = sortUniq.filter(item => this.words.findIndex(t => t.word === item) < 0)
+        this.uniqTextArray = sortUniq.filter(item => this.learnedWords.findIndex(t => t.word === item) < 0)
           .sort().map(item => ({ value: item }))
       },
       swipe(direction) {

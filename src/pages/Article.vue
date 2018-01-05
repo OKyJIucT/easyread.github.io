@@ -15,13 +15,13 @@
         v-card-text 
           pre
             v-popover.word(
-              offset="0" 
+              :offset="0"
+              :delay="0"
+              :disposeTimeout="5000"
               v-for="(word, index) in words"
               @show="translate(word, index)"
               :key="index")
-              v-btn.word(
-                :flat="activeIndex !== index" 
-                :color="activeIndex === index ? 'success' : null") {{ word }}&nbsp;
+              v-btn.word(flat :class="{active: activeIndex === index}") {{ word }}&nbsp;
 
               template(slot="popover")
                 v-card.elevation-5
