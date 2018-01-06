@@ -21,9 +21,7 @@
               v-popover.word(
                 offset="0" 
                 @show="translate(word, index)")
-                v-btn.word(
-                  :flat="activeIndex !== index" 
-                  :color="activeIndex === index ? 'success' : null") {{ word }}
+                .word(v-ripple="true") {{ word }}
 
                 template(slot="popover")
                   v-card.elevation-5
@@ -43,18 +41,21 @@
 </template>
 
 <script>
+  import Split from './../mixins/Split'
   import axios from 'axios'
   const API_URL = 'https://translate.yandex.net/api/v1.5/tr.json'
   const API_KEY = 'trnsl.1.1.20171130T120759Z.8231e8a635e67fbb.fee57266a0cdfa56496c1aed4fcbf8a9d50f72a8'
 
   export default {
+    mixins: [Split],
     data () {
       return {
         activeIndex: null,
         activeColor: null,
         words: [],
         translateWord: null,
-        article: null
+        article: null,
+        sentences: null
       }
     },
     computed: {
@@ -72,10 +73,14 @@
     mounted: function () {
       this.$store.dispatch('getUserArticle', this.$route.params.id).then((article) => {
         this.article = article
-        this.splitText()
+        this.words = this.makeArrayWithLineBreaksAndDots(this.article.text)
+        this.sentences = this.makeArrayWithSentencesAndLineBreaks(this.article.text)
       }).catch(console.log)
     },
     methods: {
+      detectSentences(word) {
+        this.sentences
+      },
       clear() {
         this.activeIndex = null
         this.translateWord = null
@@ -100,16 +105,6 @@
           }
         })
         this.activeIndex = index
-      },
-      splitText() {
-        const textArray = this.article.text
-          .replace(/\s\s+/g, ' <br> <br> ')
-          .replace(/\n/g, ' <br> ')
-          .replace(/\./g, ' .')
-          .replace(/\\,/g, ' ,')
-          .split(' ')
-        console.log('textArray', textArray)
-        this.words = textArray
       }
     }
   }
@@ -117,6 +112,7 @@
 
 <style lang="stylus" scoped>
   .word 
+    cursor pointer
     display inline-flex
     height auto
     min-width initial

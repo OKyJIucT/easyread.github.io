@@ -15,5 +15,3 @@ export default new Vuex.Store({
     articles
   }
 })
-
-// 61
